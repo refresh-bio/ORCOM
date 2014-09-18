@@ -1,4 +1,3 @@
 ORCOM
 =====
-
-Disk-based genome sequencing data compression
+Overlapping Reads COmpression with Minimizers

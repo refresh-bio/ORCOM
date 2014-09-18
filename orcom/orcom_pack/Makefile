@@ -1,0 +1,35 @@
+.PHONY: orcom_pack
+
+all: orcom_pack
+
+CXX = g++
+CXX_FLAGS += -O3 -DNDEBUG -flto -fwhole-program
+CXX_FLAGS += -m64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -static
+CXX_FLAGS += -DDISABLE_GZ_STREAM -DUSE_BOOST_THREAD
+
+CXX_OBJS =  DnarchModule.o \
+	DnarchOperator.o \
+	DnarchFile.o \
+	BinFileExtractor.o \
+	DnaCompressor.o \
+	../orcom_bin/BinFile.o \
+	../orcom_bin/DnaPacker.o \
+	../orcom_bin/DnaParser.o \
+	../orcom_bin/FileStream.o
+
+PPMD_OBJS = ../ppmd/PPMd.o \
+	../ppmd/Model.o
+
+CXX_LIBS += -lboost_thread -lboost_system -lpthread
+
+.cpp.o:
+	$(CXX) $(CXX_FLAGS) -c $< -o $@
+
+orcom_pack: $(CXX_OBJS) $(PPMD_OBJS)
+	$(CXX) $(CXX_FLAGS) -o $@ main.cpp $(CXX_OBJS) $(RLE_OBJS) $(PPMD_OBJS) $(CXX_LIBS)
+	strip $@
+
+clean:
+	-rm $(CXX_OBJS)
+	-rm $(PPMD_OBJS)
+	-rm orcom_pack
