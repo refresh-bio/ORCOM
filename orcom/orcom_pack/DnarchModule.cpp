@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "../orcom_bin/Globals.h"
 
 #if (DEV_PRINT_STATS)

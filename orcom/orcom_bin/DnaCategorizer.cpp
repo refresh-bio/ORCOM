@@ -1,9 +1,19 @@
-#include "DnaCategorizer.h"
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#include "Globals.h"
 
 #include <string.h>
 #include <algorithm>
 
+#include "DnaCategorizer.h"
 #include "DnaBlockData.h"
+
 
 DnaCategorizer::DnaCategorizer(const MinimizerParameters& params_, const CategorizerParameters& catParams_)
 	:	params(params_)
@@ -21,8 +31,7 @@ DnaCategorizer::DnaCategorizer(const MinimizerParameters& params_, const Categor
 	freqTable.resize(maxShortMinimValue, 0);
 }
 
-// this method needs refactoring <-- too much responsibilities
-//
+
 void DnaCategorizer::Categorize(std::vector<DnaRecord>& records_, uint64 recordsCount_, DnaBinBlock& bin_)
 {
 	ASSERT(recordsCount_ > 0);
@@ -35,7 +44,6 @@ void DnaCategorizer::Categorize(std::vector<DnaRecord>& records_, uint64 records
 	bin_.nBin.Clear();
 
 	std::fill(freqTable.begin(), freqTable.end(), 0);
-
 
 	// process records
 	//
@@ -53,6 +61,7 @@ void DnaCategorizer::Categorize(std::vector<DnaRecord>& records_, uint64 records
 			std::sort(db.Begin(), db.End(), comparator);
 	}
 }
+
 
 // todo: split into rev and non-rev
 void DnaCategorizer::DistributeToBins(std::vector<DnaRecord>& records_, uint64 recordsCount_, DnaBinCollection& bins_, DnaBin& nBin_)
@@ -176,6 +185,7 @@ void DnaCategorizer::DistributeToBins(std::vector<DnaRecord>& records_, uint64 r
 	}
 }
 
+
 void DnaCategorizer::FindMinimizerPositions(DnaBinCollection& bins_)
 {
 	for (uint32 i = 0; i < params.TotalMinimizersCount(); ++i)
@@ -212,6 +222,7 @@ void DnaCategorizer::FindMinimizerPositions(DnaBinCollection& bins_)
 	}
 }
 
+
 uint32 DnaCategorizer::FindMinimizer(DnaRecord &rec_)
 {
 	uint32 minimizer = maxLongMinimValue;
@@ -233,13 +244,12 @@ uint32 DnaCategorizer::FindMinimizer(DnaRecord &rec_)
 			minimizer = m;
 	}
 
-	// invalid minimizer
 	if (minimizer >= maxLongMinimValue)
 		return nBinValue;
 
-	// apply minimizer mask cut
 	return minimizer & (maxShortMinimValue - 1);
 }
+
 
 std::map<uint32, uint16> DnaCategorizer::FindMinimizers(DnaRecord &rec_)
 {
@@ -262,6 +272,7 @@ std::map<uint32, uint16> DnaCategorizer::FindMinimizers(DnaRecord &rec_)
 	return signatures;
 }
 
+
 uint32 DnaCategorizer::ComputeMinimizer(const char* dna_, uint32 mLen_)
 {
 	uint32 r = 0;
@@ -278,6 +289,7 @@ uint32 DnaCategorizer::ComputeMinimizer(const char* dna_, uint32 mLen_)
 
 	return r;
 }
+
 
 bool DnaCategorizer::IsMinimizerValid(uint32 minim_, uint32 mLen_)
 {

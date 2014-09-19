@@ -1,5 +1,13 @@
-#ifndef COMPRESSEDBLOCKDATA_H
-#define COMPRESSEDBLOCKDATA_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_COMPRESSEDBLOCKDATA
+#define H_COMPRESSEDBLOCKDATA
 
 #include "../orcom_bin/Globals.h"
 #include "../orcom_bin/Buffer.h"
@@ -51,6 +59,7 @@ struct DnaCompressedBin
 	}
 };
 
+
 struct WorkBuffers
 {
 	DnaBin dnaBin;
@@ -64,6 +73,7 @@ struct WorkBuffers
 		dnaBuffer.size = 0;
 	}
 };
+
 
 struct CompressedDnaBlock
 {
@@ -91,4 +101,5 @@ struct CompressedDnaBlock
 	}
 };
 
-#endif // COMPRESSEDBLOCKDATA_H
+
+#endif // H_COMPRESSEDBLOCKDATA

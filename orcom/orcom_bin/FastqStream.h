@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_FASTQSTREAM
 #define H_FASTQSTREAM
 
@@ -74,6 +82,7 @@ private:
 	}
 };
 
+
 class IFastqStreamWriter
 {
 public:
@@ -116,6 +125,7 @@ public:
 	}
 };
 
+
 class FastqFileWriter : public IFastqStreamWriter
 {
 public:
@@ -129,9 +139,7 @@ public:
 		delete stream;
 	}
 };
-
 typedef FastqFileWriter DnaFileWriter;
-
 
 
 class MultiFastqFileReader : public IFastqStreamReader
@@ -147,6 +155,7 @@ public:
 		delete stream;
 	}
 };
+
 
 #ifndef DISABLE_GZ_STREAM
 class MultiFastqFileReaderGz : public IFastqStreamReader

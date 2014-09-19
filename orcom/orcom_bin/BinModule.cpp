@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "Globals.h"
 
 #include <vector>
@@ -17,7 +25,6 @@
 void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const std::string &outBinFile_, uint32 threadNum_,  bool compressedInput_)
 {
 	// TODO: try/catch to free resources
-	//
 	//
 	IFastqStreamReader* fastqFile = NULL;
 	if (compressedInput_)
@@ -140,12 +147,11 @@ void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const s
 	delete fastqFile;
 }
 
+
 void BinModule::Bin2Dna(const std::string &inBinFile_, const std::string &outDnaFile_)
 {
 	// TODO: try/catch to free resources
 	//
-	//
-
 	BinFileReader binFile;
 
 	binFile.StartDecompress(inBinFile_, config);

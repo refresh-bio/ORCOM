@@ -1,5 +1,13 @@
-#ifndef BINOPERATOR_H
-#define BINOPERATOR_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BINOPERATOR
+#define H_BINOPERATOR
 
 #include "Globals.h"
 #include "DataPool.h"
@@ -18,7 +26,7 @@ typedef TDataQueue<BinaryPart> BinaryPartsQueue;
 typedef TDataQueue<DataChunk> FastqChunkQueue;
 
 
-// readers and writers can be fully templatized !!!
+// TODO: readers and writers can be fully templatized
 //
 class FastqChunkReader : public IOperator
 {
@@ -37,6 +45,7 @@ private:
 	FastqChunkPool* partsPool;
 };
 
+
 class BinChunkWriter : public IOperator
 {
 public:
@@ -53,9 +62,6 @@ private:
 	BinaryPartsQueue* partsQueue;
 	BinaryPartsPool* partsPool;
 };
-//
-//
-// ///////
 
 
 class BinEncoder : public IOperator
@@ -63,8 +69,8 @@ class BinEncoder : public IOperator
 public:
 	BinEncoder(const MinimizerParameters& params_,
 			   const CategorizerParameters& catParams_,
-			  FastqChunkQueue* fqPartsQueue_, FastqChunkPool* fqPartsPool_,
-			  BinaryPartsQueue* binPartsQueue_, BinaryPartsPool* binPartsPool_)
+			   FastqChunkQueue* fqPartsQueue_, FastqChunkPool* fqPartsPool_,
+			   BinaryPartsQueue* binPartsQueue_, BinaryPartsPool* binPartsPool_)
 		:	params(params_)
 		,	catParams(catParams_)
 		,	fqPartsQueue(fqPartsQueue_)
@@ -82,10 +88,8 @@ protected:
 	BinaryPartsQueue* binPartsQueue;
 	BinaryPartsPool* binPartsPool;
 
-
 	void Run();
 };
 
 
-
-#endif // BINOPERATOR_H
+#endif // H_BINOPERATOR

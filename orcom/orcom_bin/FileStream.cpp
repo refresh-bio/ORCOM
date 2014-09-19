@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #if defined (_WIN32)
 #	define _CRT_SECURE_NO_WARNINGS
 #	pragma warning(disable : 4996) // D_SCL_SECURE
@@ -35,7 +43,7 @@
 
 #include <stdio.h>
 
-// for memory mapped files
+// for memory mapped files -- are we using this ????
 //
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -60,16 +68,19 @@ struct IFileStream::FileStreamImpl
 	{}
 };
 
+
 IFileStream::IFileStream()
 {
 	impl = new FileStreamImpl();
 }
+
 
 IFileStream::~IFileStream()
 {
 	ASSERT(impl != NULL);
 	delete impl;
 }
+
 
 void IFileStream::SetBuffering(bool enable_)
 {
@@ -93,20 +104,24 @@ struct IMemoryStream::MemoryStreamImpl
 	{}
 };
 
+
 IMemoryStream::IMemoryStream()
 {
 	impl = new MemoryStreamImpl();
 }
+
 
 IMemoryStream::~IMemoryStream()
 {
 	delete impl;
 }
 
+
 void* IMemoryStream::Pointer()
 {
 	return impl->memory;
 }
+
 
 FileStreamReader::FileStreamReader(const std::string& fileName_)
 	:	size(0)
@@ -126,6 +141,7 @@ FileStreamReader::FileStreamReader(const std::string& fileName_)
 	position = 0;
 }
 
+
 FileStreamReader::~FileStreamReader()
 {
 	ASSERT(impl != NULL);
@@ -133,6 +149,7 @@ FileStreamReader::~FileStreamReader()
 	if (impl->file != NULL)
 		FCLOSE(impl->file);
 }
+
 
 void FileStreamReader::Close()
 {
@@ -142,6 +159,7 @@ void FileStreamReader::Close()
 	impl->file = NULL;
 }
 
+
 int64 FileStreamReader::Read(uchar *mem_, uint64 size_)
 {
 	int64 n = fread(mem_, 1, size_, impl->file);
@@ -149,6 +167,7 @@ int64 FileStreamReader::Read(uchar *mem_, uint64 size_)
 		position += n;
 	return n;
 }
+
 
 void FileStreamReader::SetPosition(uint64 pos_)
 {
@@ -163,6 +182,7 @@ void FileStreamReader::SetPosition(uint64 pos_)
 	FSEEK(impl->file, pos_, SEEK_SET);
 	position = pos_;
 }
+
 
 MemoryStreamReader::MemoryStreamReader(const std::string &fileName_)
 	:	position(0)
@@ -195,6 +215,7 @@ MemoryStreamReader::MemoryStreamReader(const std::string &fileName_)
 	memoryBuffer = new IBuffer((byte*)impl->memory, impl->size);
 }
 
+
 MemoryStreamReader::~MemoryStreamReader()
 {
 	Close();
@@ -202,6 +223,7 @@ MemoryStreamReader::~MemoryStreamReader()
 	if (memoryBuffer != NULL)
 		delete memoryBuffer;
 }
+
 
 void MemoryStreamReader::Close()
 {
@@ -227,6 +249,7 @@ void MemoryStreamReader::Close()
 	position = 0;
 }
 
+
 void MemoryStreamReader::SetPosition(uint64 pos_)
 {
 	if (pos_ > impl->size)
@@ -235,10 +258,12 @@ void MemoryStreamReader::SetPosition(uint64 pos_)
 	position = pos_;
 }
 
+
 uint64 MemoryStreamReader::Size() const
 {
 	return impl->size;
 }
+
 
 int64 MemoryStreamReader::Read(uchar *mem_, uint64 size_)
 {
@@ -253,6 +278,7 @@ int64 MemoryStreamReader::Read(uchar *mem_, uint64 size_)
 	}
 	return toRead;
 }
+
 
 int64 MemoryStreamReader::Attach(uchar *&mem_, uint64 size_)
 {
@@ -280,6 +306,7 @@ FileStreamWriter::FileStreamWriter(const std::string& fileName_)
 	impl->file = f;
 }
 
+
 FileStreamWriter::~FileStreamWriter()
 {
 	ASSERT(impl != NULL);
@@ -287,6 +314,7 @@ FileStreamWriter::~FileStreamWriter()
 	if (impl->file != NULL)
 		FCLOSE(impl->file);
 }
+
 
 void FileStreamWriter::Close()
 {
@@ -296,6 +324,7 @@ void FileStreamWriter::Close()
 	impl->file = NULL;
 }
 
+
 int64 FileStreamWriter::Write(const uchar *mem_, uint64 size_)
 {
 	int64 n = fwrite(mem_, 1, size_, impl->file);
@@ -303,6 +332,7 @@ int64 FileStreamWriter::Write(const uchar *mem_, uint64 size_)
 		position += n;
 	return n;
 }
+
 
 void FileStreamWriter::SetPosition(uint64 pos_)
 {
@@ -325,6 +355,7 @@ IMultiFileStreamReader::IMultiFileStreamReader(const std::vector<std::string> &f
 	OpenNext();
 }
 
+
 IMultiFileStreamReader::~IMultiFileStreamReader()
 {
 	Close();
@@ -332,6 +363,7 @@ IMultiFileStreamReader::~IMultiFileStreamReader()
 	if (fileFuncImpl != NULL)
 		delete fileFuncImpl;
 }
+
 
 void IMultiFileStreamReader::Close()
 {
@@ -341,6 +373,7 @@ void IMultiFileStreamReader::Close()
 		impl->file = NULL;
 	}
 }
+
 
 bool IMultiFileStreamReader::OpenNext()
 {
@@ -363,6 +396,7 @@ bool IMultiFileStreamReader::OpenNext()
 	return true;
 }
 
+
 int64 IMultiFileStreamReader::Read(uchar *mem_, uint64 size_)
 {
 	if (impl->file == NULL)
@@ -379,6 +413,7 @@ int64 IMultiFileStreamReader::Read(uchar *mem_, uint64 size_)
 
 	return n;
 }
+
 
 struct StdFileFuncImpl : public IFileFuncImpl
 {
@@ -422,12 +457,15 @@ struct GzFileFuncImpl : public IFileFuncImpl
 	}
 };
 
+
 MultiFileStreamReader::MultiFileStreamReader(const std::vector<std::string> &fileNames_)
 	: IMultiFileStreamReader(fileNames_, new StdFileFuncImpl())
 {}
 
+
 MultiFileStreamReaderGz::MultiFileStreamReaderGz(const std::vector<std::string> &fileNames_)
 	: IMultiFileStreamReader(fileNames_, new GzFileFuncImpl())
 {}
+
 
 #endif

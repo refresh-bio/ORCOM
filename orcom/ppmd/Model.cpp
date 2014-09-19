@@ -1,9 +1,10 @@
 /****************************************************************************
  *  This file is part of PPMd project                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001, 2006, 2013                                                   *
+ *  Original code designed and distributed to public domain                 *
+ *  by Dmitry Shkarin 1997, 1999-2001, 2006, 2013                           *
  *  Contents: PPMII model description and encoding/decoding routines        *
  ****************************************************************************/
+
 #include <string.h>
 #include "PPMd.h"
 

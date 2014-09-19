@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_BINFILE
 #define H_BINFILE
 
@@ -99,4 +107,4 @@ protected:
 	void ReadFileFooter();
 };
 
-#endif
+#endif // H_BINFILE

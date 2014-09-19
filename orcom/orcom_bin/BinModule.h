@@ -1,5 +1,13 @@
-#ifndef BINMODULE_H
-#define BINMODULE_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BINMODUL
+#define H_BINMODULE
 
 #include "Globals.h"
 
@@ -7,6 +15,7 @@
 #include <vector>
 
 #include "Params.h"
+
 
 class BinModule
 {
@@ -24,4 +33,4 @@ private:
 };
 
 
-#endif // BINMODULE_H
+#endif // H_BINMODULE

@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "../orcom_bin/Globals.h"
 
 #include <string>
@@ -12,6 +20,7 @@ DnarchFileWriter::DnarchFileWriter()
 	,	dataStream(NULL)
 {}
 
+
 DnarchFileWriter::~DnarchFileWriter()
 {
 	if (metaStream != NULL)
@@ -20,6 +29,7 @@ DnarchFileWriter::~DnarchFileWriter()
 	if (dataStream != NULL)
 		delete dataStream;
 }
+
 
 void DnarchFileWriter::StartCompress(const std::string &fileName_, const MinimizerParameters &minParams_, const CompressorParams& compParams_)
 {
@@ -47,6 +57,7 @@ void DnarchFileWriter::StartCompress(const std::string &fileName_, const Minimiz
 	metaStream->SetPosition(DnarchFileHeader::HeaderSize);
 }
 
+
 void DnarchFileWriter::WriteNextBin(const CompressedDnaBlock *bin_)
 {
 	ASSERT(bin_->dataBuffer.size > 0);
@@ -60,6 +71,7 @@ void DnarchFileWriter::WriteNextBin(const CompressedDnaBlock *bin_)
 
 	dataStream->Write(bin_->dataBuffer.data.Pointer(), bin_->dataBuffer.size);
 }
+
 
 void DnarchFileWriter::FinishCompress()
 {
@@ -92,10 +104,12 @@ void DnarchFileWriter::FinishCompress()
 	dataStream = NULL;
 }
 
+
 void DnarchFileWriter::WriteFileHeader()
 {
 	metaStream->Write((byte*)&fileHeader, DnarchFileHeader::HeaderSize);
 }
+
 
 void DnarchFileWriter::WriteFileFooter()
 {
@@ -105,13 +119,12 @@ void DnarchFileWriter::WriteFileFooter()
 }
 
 
-
 DnarchFileReader::DnarchFileReader()
 	:	metaStream(NULL)
 	,	dataStream(NULL)
 	,	blockIdx(0)
-{
-}
+{}
+
 
 DnarchFileReader::~DnarchFileReader()
 {
@@ -121,6 +134,7 @@ DnarchFileReader::~DnarchFileReader()
 	if (dataStream != NULL)
 		delete dataStream;
 }
+
 
 void DnarchFileReader::StartDecompress(const std::string &fileName_, MinimizerParameters &minParams_)
 {
@@ -158,10 +172,12 @@ void DnarchFileReader::StartDecompress(const std::string &fileName_, MinimizerPa
 	minParams_ = fileHeader.minParams;
 }
 
+
 void DnarchFileReader::ReadFileHeader()
 {
 	metaStream->Read((byte*)&fileHeader, DnarchFileHeader::HeaderSize);
 }
+
 
 void DnarchFileReader::ReadFileFooter()
 {
@@ -172,6 +188,7 @@ void DnarchFileReader::ReadFileFooter()
 
 	metaStream->Read((byte*)fileFooter.blockSizes.data(), fileFooter.blockSizes.size() * sizeof(uint64));
 }
+
 
 bool DnarchFileReader::ReadNextBin(CompressedDnaBlock *bin_)
 {
@@ -188,6 +205,7 @@ bool DnarchFileReader::ReadNextBin(CompressedDnaBlock *bin_)
 	blockIdx++;
 	return true;
 }
+
 
 void DnarchFileReader::FinishDecompress()
 {

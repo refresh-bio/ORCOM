@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "../orcom_bin/Globals.h"
 
 #include <iostream>
@@ -22,8 +30,6 @@ BinFileExtractor::BinFileExtractor(uint32 minBinSize_)
 	,	stdBlockCount(0)
 {}
 
-BinFileExtractor::~BinFileExtractor()
-{}
 
 void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleConfig &params_)
 {
@@ -174,6 +180,7 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 	}
 }
 
+
 bool BinFileExtractor::ExtractNextStdBin(BinaryBinBlock &bin_, uint32 &minimizerId_)
 {
 	bin_.Reset();
@@ -195,6 +202,7 @@ bool BinFileExtractor::ExtractNextStdBin(BinaryBinBlock &bin_, uint32 &minimizer
 	currentStdBlockIdx++;
 	return true;
 }
+
 
 bool BinFileExtractor::ExtractNextSmallBin(BinaryBinBlock &bin_, uint32 &minimizerId_)
 {
@@ -218,6 +226,7 @@ bool BinFileExtractor::ExtractNextSmallBin(BinaryBinBlock &bin_, uint32 &minimiz
 	return true;
 }
 
+
 bool BinFileExtractor::ExtractNBin(BinaryBinBlock &bin_, uint32& minimizerId_)
 {
 	bin_.Reset();
@@ -228,6 +237,7 @@ bool BinFileExtractor::ExtractNBin(BinaryBinBlock &bin_, uint32& minimizerId_)
 
 	return true;
 }
+
 
 void BinFileExtractor::ExtractNextBin(const BlockDescriptor &desc_, BinaryBinBlock &bin_)
 {

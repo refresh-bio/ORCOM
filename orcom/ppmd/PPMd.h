@@ -1,3 +1,9 @@
+/****************************************************************************
+ *  This file is part of PPMd library                                       *
+ *  Contents: PPMd library wrapper                                          *
+ *  Author: Lucas Roguski, 2014                                             *
+ ****************************************************************************/
+
 #ifndef _PPMD_H_
 #define _PPMD_H_
 

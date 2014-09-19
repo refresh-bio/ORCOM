@@ -1,7 +1,16 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_DATASTREAM
 #define H_DATASTREAM
 
 #include "Globals.h"
+
 
 class IDataStream
 {
@@ -15,11 +24,13 @@ public:
 	virtual void SetPosition(uint64 pos_) = 0;
 };
 
+
 class IDataStreamReader : public IDataStream
 {
 public:
 	virtual int64 Read(uchar* mem_, uint64 size_) = 0;
 };
+
 
 class IDataStreamWriter : public IDataStream
 {

@@ -1,3 +1,9 @@
+/****************************************************************************
+ *  This file is part of PPMd library                                       *
+ *  Contents: PPMd library wrapper                                          *
+ *  Author: Lucas Roguski, 2014                                             *
+ ****************************************************************************/
+
 #include "PPMd.h"
 
 #include <stdlib.h>
@@ -96,7 +102,6 @@ bool PpmdDecoder::FinishDecompress()
 {
 	return ppmd_stop_suballocator() == PPMD_OK;
 }
-
 
 
 // C-style function wrappers:

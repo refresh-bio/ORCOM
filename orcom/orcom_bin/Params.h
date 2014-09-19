@@ -1,9 +1,18 @@
-#ifndef BINPARAMS_H
-#define BINPARAMS_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BINPARAMS
+#define H_BINPARAMS
 
 #include "Globals.h"
 
 #include <algorithm>
+
 
 struct MinimizerParameters
 {
@@ -55,6 +64,7 @@ struct MinimizerParameters
 	}
 };
 
+
 struct CategorizerParameters
 {
 	static const uint32 DefaultMinimumPartialBinSize = 4;
@@ -65,6 +75,7 @@ struct CategorizerParameters
 		:	minBlockBinSize(DefaultMinimumPartialBinSize)
 	{}
 };
+
 
 struct BinModuleConfig
 {
@@ -79,4 +90,5 @@ struct BinModuleConfig
 	{}
 };
 
-#endif // BINPARAMS_H
+
+#endif // H_BINPARAMS

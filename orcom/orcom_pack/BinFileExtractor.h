@@ -1,5 +1,13 @@
-#ifndef BINFILEEXTRACTOR_H
-#define BINFILEEXTRACTOR_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BINFILEEXTRACTOR
+#define H_BINFILEEXTRACTOR
 
 #include "../orcom_bin/Globals.h"
 #include "../orcom_bin/BinBlockData.h"
@@ -9,9 +17,6 @@
 class BinFileExtractor : public BinFileReader
 {
 public:
-	static const uint32 DefaultMinimumBinSize = 64;
-
-
 	struct SubBlockDescriptor : public BinaryBinDescriptor
 	{
 		uint64 metaPosition;
@@ -33,9 +38,10 @@ public:
 		{}
 	};
 
+	static const uint32 DefaultMinimumBinSize = 64;
+
 
 	BinFileExtractor(uint32 minBinSize_ = DefaultMinimumBinSize);
-	~BinFileExtractor();
 
 	void StartDecompress(const std::string& fileName_, BinModuleConfig& params_);
 
@@ -85,7 +91,6 @@ public:
 	}
 
 private:
-
 	using BinFileReader::ReadNextBlock;
 
 	const uint32 minBinSize;
@@ -100,4 +105,5 @@ private:
 	void ExtractNextBin(const BlockDescriptor& desc_, BinaryBinBlock &bin_);
 };
 
-#endif // BINFILEEXTRACTOR_H
+
+#endif // H_BINFILEEXTRACTOR

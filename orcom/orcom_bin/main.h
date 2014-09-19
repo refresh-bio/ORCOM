@@ -1,5 +1,13 @@
-#ifndef MAIN_H
-#define MAIN_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_MAIN
+#define H_MAIN
 
 #include "Globals.h"
 
@@ -49,4 +57,5 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_);
 
 int main(int argc_, const char* argv_[]);
 
-#endif // MAIN_H
+
+#endif //H_ MAIN

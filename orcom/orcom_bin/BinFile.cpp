@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "Globals.h"
 
 #include <cstring>
@@ -21,6 +29,7 @@ BinFileWriter::BinFileWriter()
 	std::fill((uchar*)&fileHeader, (uchar*)&fileHeader + sizeof(BinFileHeader), 0);
 }
 
+
 BinFileWriter::~BinFileWriter()
 {
 	if (metaStream != NULL)
@@ -29,6 +38,7 @@ BinFileWriter::~BinFileWriter()
 	if (dnaStream != NULL)
 		delete dnaStream;
 }
+
 
 void BinFileWriter::StartCompress(const std::string& fileName_, const BinModuleConfig& params_)
 {
@@ -58,6 +68,7 @@ void BinFileWriter::StartCompress(const std::string& fileName_, const BinModuleC
 	currentBlockId = 0;
 }
 
+
 void BinFileWriter::WriteNextBlock(const BinaryBinBlock* block_)
 {
 	ASSERT(block_ != NULL);
@@ -85,6 +96,7 @@ void BinFileWriter::WriteNextBlock(const BinaryBinBlock* block_)
 
 	currentBlockId++;
 }
+
 
 void BinFileWriter::FinishCompress()
 {
@@ -156,10 +168,12 @@ void BinFileWriter::FinishCompress()
 	dnaStream = NULL;
 }
 
+
 void BinFileWriter::WriteFileHeader()
 {
 	metaStream->Write((byte*)&fileHeader, BinFileHeader::HeaderSize);
 }
+
 
 void BinFileWriter::WriteFileFooter()
 {
@@ -182,6 +196,7 @@ void BinFileWriter::WriteFileFooter()
 	metaStream->Write(writer.Pointer(), writer.Position());
 }
 
+
 BinFileReader::BinFileReader()
 	:	metaStream(NULL)
 	,	dnaStream(NULL)
@@ -192,6 +207,7 @@ BinFileReader::BinFileReader()
 	std::fill((uchar*)&fileHeader, (uchar*)&fileHeader + sizeof(BinFileHeader), 0);
 }
 
+
 BinFileReader::~BinFileReader()
 {
 	if (metaStream)
@@ -200,6 +216,7 @@ BinFileReader::~BinFileReader()
 	if (dnaStream)
 		delete dnaStream;
 }
+
 
 void BinFileReader::StartDecompress(const std::string& fileName_, BinModuleConfig& params_)
 {
@@ -242,6 +259,7 @@ void BinFileReader::StartDecompress(const std::string& fileName_, BinModuleConfi
 	currentBlockId = 0;
 	currentNonEmptyBlockId = 0;
 }
+
 
 bool BinFileReader::ReadNextBlock(BinaryBinBlock* block_)
 {
@@ -305,6 +323,7 @@ bool BinFileReader::ReadNextBlock(BinaryBinBlock* block_)
 	return true;
 }
 
+
 void BinFileReader::FinishDecompress()
 {
 	if (metaStream)
@@ -322,10 +341,12 @@ void BinFileReader::FinishDecompress()
 	}
 }
 
+
 void BinFileReader::ReadFileHeader()
 {
 	metaStream->Read((byte*)&fileHeader, BinFileHeader::HeaderSize);
 }
+
 
 void BinFileReader::ReadFileFooter()
 {

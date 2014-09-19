@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_GLOBALS
 #define H_GLOBALS
 
@@ -67,7 +75,7 @@ typedef uint64_t			uint64;
 
 
 
-// operator interface for multithreading support
+// common interfaces
 //
 class IOperator
 {
@@ -82,8 +90,16 @@ public:
 	virtual void Run() = 0;
 };
 
+struct ICoder
+{
+	virtual ~ICoder() {}
 
-// split this depending on the project -- bin/pack
+	virtual void Start() = 0;
+	virtual void End() = 0;
+};
+
+
+// TODO: split declarations depending on the project -- bin/pack
 //
 class DnaRecord;
 class BitMemoryReader;

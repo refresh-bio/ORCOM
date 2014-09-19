@@ -1,5 +1,13 @@
-#ifndef DNARCHFILE_H
-#define DNARCHFILE_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DNARCHFILE
+#define H_DNARCHFILE
 
 #include "../orcom_bin/Globals.h"
 
@@ -42,7 +50,6 @@ protected:
 	DnarchFileHeader fileHeader;
 	DnarchFileFooter fileFooter;
 };
-
 
 
 class DnarchFileWriter : public DnarchFileBase
@@ -93,4 +100,5 @@ protected:
 	void ReadFileFooter();
 };
 
-#endif // DNARCHFILE_H
+
+#endif // H_DNARCHFILE

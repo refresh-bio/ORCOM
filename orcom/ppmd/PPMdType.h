@@ -1,10 +1,11 @@
 /****************************************************************************
  *  This file is part of PPMd library                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001, 2006, 2013                                                   *
+ *  Original code designed and distributed to public domain                 *
+ *  by Dmitry Shkarin 1997, 1999-2001, 2006, 2013                           *
  *  Contents: compilation parameters and miscelaneous definitions           *
  *  Comments: system & compiler dependent file                              *
  ****************************************************************************/
+
 #ifndef _PPMDTYPE_H_
 #define _PPMDTYPE_H_
 //#define NDEBUG

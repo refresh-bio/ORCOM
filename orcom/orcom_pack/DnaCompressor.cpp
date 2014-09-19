@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "../orcom_bin/Globals.h"
 
 #include <string.h>
@@ -31,11 +39,13 @@ DnaStoreBase::DnaStoreBase(const MinimizerParameters &minParams_)
 	std::fill(dummySequence, dummySequence + DnaRecord::MaxDnaLen, 'N');
 }
 
+
 DnaStoreBase::~DnaStoreBase()
 {
 	for (uint32 i = 0; i < prevBuffer.size(); ++i)
 		delete prevBuffer[i];
 }
+
 
 void DnaStoreBase::PrepareLzBuffer(uint32 size_)
 {
@@ -51,6 +61,7 @@ void DnaStoreBase::PrepareLzBuffer(uint32 size_)
 		prevBuffer.push_back(lz);
 	}
 }
+
 
 DnaCompressorBase::MatchResult DnaCompressorBase::FindBestLzMatch(const DnaRecord &rec_, int32 recMinPos_)
 {
@@ -119,6 +130,7 @@ DnaCompressorBase::MatchResult DnaCompressorBase::FindBestLzMatch(const DnaRecor
 #undef ONLY_POS
 }
 
+
 int32 DnaCompressorBase::CalculateMismatchesCost(const char* seq1_, uint32 len1_, const char* seq2_, uint32 len2_, int32 bestValue_)
 {
 	uint32 minLen = MIN(len1_, len2_);
@@ -146,6 +158,7 @@ DnaCompressor::DnaCompressor(const MinimizerParameters &minParams_, const Compre
 	ppmdEncoder->StartCompress(PpmdOrder, PpmdMemorySizeMb);
 }
 
+
 DnaCompressor::~DnaCompressor()
 {
 	CleanupWriters();	// in case of exception
@@ -153,6 +166,7 @@ DnaCompressor::~DnaCompressor()
 	ppmdEncoder->FinishCompress();
 	delete ppmdEncoder;
 }
+
 
 void DnaCompressor::PrepareWriters(DnaCompressedBin& dnaWorkBin_)
 {
@@ -169,6 +183,7 @@ void DnaCompressor::PrepareWriters(DnaCompressedBin& dnaWorkBin_)
 	lettersCoder = new LettersEncoder(*writers[DnaCompressedBin::LetterXBuffer]);
 	rleEncoder = new BinaryRleEncoder(*writers[DnaCompressedBin::MatchBuffer]);
 }
+
 
 void DnaCompressor::CleanupWriters()
 {
@@ -189,8 +204,8 @@ void DnaCompressor::CompressDna(DnaBin &dnaBin_, uint32 minimizerId_, uint64 raw
 	if (dnaBin_.Size() == 0)
 		return;
 
-	ASSERT(dnaBin_.stats.maxLen > 0);
-	ASSERT(dnaBin_.stats.maxLen >= dnaBin_.stats.minLen);
+	ASSERT(dnaBin_.GetStats().maxLen > 0);
+	ASSERT(dnaBin_.GetStats().maxLen >= dnaBin_.GetStats().minLen);
 
 
 	// preprocess header
@@ -198,10 +213,10 @@ void DnaCompressor::CompressDna(DnaBin &dnaBin_, uint32 minimizerId_, uint64 raw
 	blockDesc.Clear();
 	blockDesc.header.minimizerId = minimizerId_;
 	blockDesc.header.recordsCount = dnaBin_.Size();
-	blockDesc.header.recMinLen = dnaBin_.stats.minLen;
-	blockDesc.header.recMaxLen = dnaBin_.stats.maxLen;
+	blockDesc.header.recMinLen = dnaBin_.GetStats().minLen;
+	blockDesc.header.recMaxLen = dnaBin_.GetStats().maxLen;
 	blockDesc.header.rawDnaStreamSize = rawDnaStreamSize_;
-	blockDesc.isLenConst = (dnaBin_.stats.minLen == dnaBin_.stats.maxLen);
+	blockDesc.isLenConst = (dnaBin_.GetStats().minLen == dnaBin_.GetStats().maxLen);
 
 	if (minimizerId_ != minParams.TotalMinimizersCount())
 		CompressDnaFull(dnaBin_, dnaWorkBin_, compBin_);
@@ -210,6 +225,7 @@ void DnaCompressor::CompressDna(DnaBin &dnaBin_, uint32 minimizerId_, uint64 raw
 
 	compBin_.signatureId = minimizerId_;
 }
+
 
 void DnaCompressor::CompressDnaFull(DnaBin &dnaBin_, DnaCompressedBin& dnaWorkBin_, CompressedDnaBlock &compBin_)
 {
@@ -470,6 +486,7 @@ void DnaCompressor::CompressDnaRaw(DnaBin &dnaBin_, DnaCompressedBin& dnaWorkBin
 	}
 }
 
+
 void DnaCompressor::CompressRecordNormal(const DnaRecord &rec_)
 {
 	int32 minPos = rec_.minimizerPos;
@@ -616,6 +633,7 @@ DnaDecompressor::DnaDecompressor(const MinimizerParameters &minParams_)
 	ppmdDecoder->StartDecompress(PpmdMemorySizeMb);
 }
 
+
 DnaDecompressor::~DnaDecompressor()
 {
 	CleanupReaders();
@@ -623,6 +641,7 @@ DnaDecompressor::~DnaDecompressor()
 	ppmdDecoder->FinishDecompress();
 	delete ppmdDecoder;
 }
+
 
 void DnaDecompressor::PrepareReaders(DnaCompressedBin &dnaWorkBin_)
 {
@@ -636,6 +655,7 @@ void DnaDecompressor::PrepareReaders(DnaCompressedBin &dnaWorkBin_)
 	lettersCoder = new LettersDecoder(*readers[DnaCompressedBin::LetterXBuffer]);
 	rleDecoder = new BinaryRleDecoder(*readers[DnaCompressedBin::MatchBuffer]);
 }
+
 
 void DnaDecompressor::CleanupReaders()
 {
@@ -685,6 +705,7 @@ void DnaDecompressor::DecompressDna(CompressedDnaBlock &compBin_, DnaBin &dnaBin
 
 	ASSERT(dnaBuffer_.size == blockDesc.header.rawDnaStreamSize);
 }
+
 
 void DnaDecompressor::DecompressDnaFull(CompressedDnaBlock &compBin_, DnaCompressedBin& dnaWorkBin_, DnaBin &dnaBin_, DataChunk& dnaBuffer_)
 {
@@ -830,6 +851,7 @@ void DnaDecompressor::DecompressDnaFull(CompressedDnaBlock &compBin_, DnaCompres
 	//
 	CleanupReaders();
 }
+
 
 void DnaDecompressor::DecompressDnaRaw(CompressedDnaBlock &compBin_, DnaCompressedBin& /*dnaWorkBin_*/, DnaBin &dnaBin_, DataChunk& dnaBuffer_)
 {

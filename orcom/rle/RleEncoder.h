@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef RLEENCODER_H
 #define RLEENCODER_H
 
@@ -5,7 +13,7 @@
 #include "../orcom_bin/BitMemory.h"
 
 
-class BinaryRleEncoder
+class BinaryRleEncoder : public ICoder
 {
 public:
 	BinaryRleEncoder(BitMemoryWriter& writer_)
@@ -51,7 +59,6 @@ public:
 		}
 	}
 
-
 private:
 	static const uint32 RleMax = 255;
 	static const uint32 RleOffset = 2;
@@ -67,15 +74,14 @@ private:
 };
 
 
-class BinaryRleDecoder
+class BinaryRleDecoder : public ICoder
 {
 public:
 	BinaryRleDecoder(BitMemoryReader& reader_)
 		:	reader(reader_)
 		,	currentCount(0)
 		,	onlyMatches(false)
-	{
-	}
+	{}
 
 	void Start()
 	{
@@ -85,9 +91,7 @@ public:
 	}
 
 	void End()
-	{
-
-	}
+	{}
 
 	bool GetSym()
 	{
@@ -123,5 +127,6 @@ private:
 		}
 	}
 };
+
 
 #endif // RLEENCODER_H

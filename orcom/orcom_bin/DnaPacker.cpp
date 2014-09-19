@@ -1,8 +1,18 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#include "Globals.h"
 #include "DnaPacker.h"
 #include "BitMemory.h"
 #include "DnaBlockData.h"
 #include "BinBlockData.h"
 #include "Utils.h"
+
 
 DnaPacker::DnaPacker(const MinimizerParameters& params_)
 	:	params(params_)
@@ -21,6 +31,7 @@ DnaPacker::DnaPacker(const MinimizerParameters& params_)
 		idxToDna[i] = params_.dnaSymbolOrder[i];
 	}
 }
+
 
 void DnaPacker::PackToBins(const DnaBinBlock& dnaBins_, BinaryBinBlock& binBins_)
 {
@@ -54,6 +65,7 @@ void DnaPacker::PackToBins(const DnaBinBlock& dnaBins_, BinaryBinBlock& binBins_
 	}
 }
 
+
 void DnaPacker::PackToBin(const DnaBin &dnaBin_, BitMemoryWriter& metaWriter_, BitMemoryWriter& dnaWriter_,
 						  BinaryBinDescriptor& binDesc_, bool cutMinimizer_)
 {
@@ -67,12 +79,12 @@ void DnaPacker::PackToBin(const DnaBin &dnaBin_, BitMemoryWriter& metaWriter_, B
 		return;
 
 	ASSERT(recordsCount < (1 << 28));
-	ASSERT(dnaBin_.stats.maxLen > 0);
-	ASSERT(dnaBin_.stats.maxLen >= dnaBin_.stats.minLen);
+	ASSERT(dnaBin_.GetStats().maxLen > 0);
+	ASSERT(dnaBin_.GetStats().maxLen >= dnaBin_.GetStats().minLen);
 
 	BinPackSettings settings;
-	settings.minLen = dnaBin_.stats.minLen;
-	settings.maxLen = dnaBin_.stats.maxLen;
+	settings.minLen = dnaBin_.GetStats().minLen;
+	settings.maxLen = dnaBin_.GetStats().maxLen;
 	settings.hasConstLen = (settings.minLen == settings.maxLen);
 
 	if (!cutMinimizer_)
@@ -80,11 +92,11 @@ void DnaPacker::PackToBin(const DnaBin &dnaBin_, BitMemoryWriter& metaWriter_, B
 	else
 		settings.suffixLen = 0;
 
-	metaWriter_.PutBits(dnaBin_.stats.minLen, LenBits);
-	metaWriter_.PutBits(dnaBin_.stats.maxLen, LenBits);
+	metaWriter_.PutBits(dnaBin_.GetStats().minLen, LenBits);
+	metaWriter_.PutBits(dnaBin_.GetStats().maxLen, LenBits);
 
 	if (!settings.hasConstLen)
-		settings.bitsPerLen = bit_length(dnaBin_.stats.maxLen - dnaBin_.stats.minLen);
+		settings.bitsPerLen = bit_length(dnaBin_.GetStats().maxLen - dnaBin_.GetStats().minLen);
 
 	for (uint32 i = 0; i < recordsCount; ++i)
 	{
@@ -99,6 +111,7 @@ void DnaPacker::PackToBin(const DnaBin &dnaBin_, BitMemoryWriter& metaWriter_, B
 	binDesc_.metaSize = metaWriter_.Position() - initialMetaPos;
 	binDesc_.dnaSize = dnaWriter_.Position() - initialDnaPos;
 }
+
 
 void DnaPacker::StoreNextRecord(const DnaRecord &rec_, BitMemoryWriter& metaWriter_, BitMemoryWriter& dnaWriter_,
 								const BinPackSettings& settings_)
@@ -193,6 +206,7 @@ void DnaPacker::UnpackFromBins(const BinaryBinBlock &binBins_, DnaBinBlock &dnaB
 
 }
 
+
 void DnaPacker::UnpackFromBin(const BinaryBinDescriptor& desc_, DnaBin &dnaBin_, DataChunk& dnaChunk_,
 							  BitMemoryReader& metaReader_, BitMemoryReader& dnaReader_, uint32 minimizerId_)
 {
@@ -265,8 +279,7 @@ void DnaPacker::UnpackFromBin(const BinaryBinDescriptor& desc_, DnaBin &dnaBin_,
 
 	dnaChunk_.size += dnaBufferPos;
 
-	dnaBin_.stats.maxLen = settings.maxLen;
-	dnaBin_.stats.minLen = settings.minLen;
+	dnaBin_.SetStats(settings.minLen, settings.maxLen);
 
 	metaReader_.FlushInputWordBuffer();
 	dnaReader_.FlushInputWordBuffer();
@@ -391,13 +404,14 @@ void DnaPacker::UnpackFromBin(const BinaryBinBlock& binBin_, DnaBin& dnaBin_, ui
 		metaReader.FlushInputWordBuffer();
 		dnaReader.FlushInputWordBuffer();
 
-		dnaBin_.stats.minLen = MIN(settings.minLen, dnaBin_.stats.minLen);
-		dnaBin_.stats.maxLen = MAX(settings.maxLen, dnaBin_.stats.maxLen);
+		dnaBin_.SetStats(MIN(settings.minLen, dnaBin_.GetStats().minLen),
+						 MAX(settings.maxLen, dnaBin_.GetStats().maxLen));
 
 		ASSERT(metaReader.Position() - initialMetaPos == desc.metaSize);
 		ASSERT(dnaReader.Position() - initialDnaPos == desc.dnaSize);
 	}
 }
+
 
 bool DnaPacker::ReadNextRecord(BitMemoryReader &metaReader_, BitMemoryReader &dnaReader_, DnaRecord &rec_,
 							   const BinPackSettings& settings_)

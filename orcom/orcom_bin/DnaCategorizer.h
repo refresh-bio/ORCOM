@@ -1,5 +1,13 @@
-#ifndef DNACATEGORIZER_H
-#define DNACATEGORIZER_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DNACATEGORIZER
+#define H_DNACATEGORIZER
 
 #include "Globals.h"
 
@@ -9,6 +17,7 @@
 #include "DnaRecord.h"
 #include "Collections.h"
 #include "Params.h"
+
 
 class DnaCategorizer
 {
@@ -40,4 +49,4 @@ private:
 };
 
 
-#endif // DNACATEGORIZER_H
+#endif // H_DNACATEGORIZER

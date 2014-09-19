@@ -1,3 +1,13 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+
+  Range coder algorithm based on 'Carryless rangecoder' by Dmitry Subbotin
+*/
+
 #ifndef H_RANGECODER
 #define H_RANGECODER
 
@@ -25,6 +35,7 @@ protected:
 	Code	low;
 	Freq	range;
 };
+
 
 class RangeEncoder : private RangeCoder
 {
@@ -71,6 +82,7 @@ public:
 private:
 	BitMemoryWriter& byteStream;
 };
+
 
 class RangeDecoder : private RangeCoder
 {
@@ -125,5 +137,6 @@ private:
 	BitMemoryReader& byteStream;
 	Code buffer;
 };
+
 
 #endif // H_RANGECODER

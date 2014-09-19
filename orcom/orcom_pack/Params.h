@@ -1,7 +1,16 @@
-#ifndef PACKPARAMS_H
-#define PACKPARAMS_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_PACKPARAMS
+#define H_PACKPARAMS
 
 #include "../orcom_bin/Globals.h"
+
 
 struct CompressorParams
 {
@@ -33,4 +42,4 @@ struct CompressorParams
 };
 
 
-#endif // PACKPARAMS_H
+#endif // H_PACKPARAMS

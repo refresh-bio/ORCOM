@@ -1,4 +1,14 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#include "Globals.h"
 #include "FastqStream.h"
+
 
 bool IFastqStreamReader::ReadNextChunk(DataChunk* chunk_)
 {
@@ -56,6 +66,7 @@ bool IFastqStreamReader::ReadNextChunk(DataChunk* chunk_)
 
 	return true;
 }
+
 
 uint64 IFastqStreamReader::GetNextRecordPos(uchar* data_, uint64 pos_, const uint64 size_)
 {

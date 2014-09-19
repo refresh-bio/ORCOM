@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_BITMEMORY
 #define H_BITMEMORY
 
@@ -19,8 +27,7 @@ public:
 		,	position(0)
 		,	wordBuffer(0)
 		,	wordBufferPos(0)
-	{
-	}
+	{}
 
 	uint64 Size() const
 	{
@@ -43,8 +50,7 @@ public:
 		return buffer.Pointer();
 	}
 
-	// refactor
-	//
+	// TODO: refactor
 	uint32 GetBit()
 	{
 		if (wordBufferPos == 0)
@@ -376,7 +382,6 @@ public:
 		wordBuffer = 0;
 	}
 
-
 private:
 	static const uint32 WordBufferSize = 32;
 
@@ -395,4 +400,4 @@ private:
 };
 
 
-#endif
+#endif // H_BITMEMORY

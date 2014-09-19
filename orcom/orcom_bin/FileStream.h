@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_FILESTREAM
 #define H_FILESTREAM
 
@@ -9,6 +17,13 @@
 #include "DataStream.h"
 #include "Buffer.h"
 
+struct IFileFuncImpl
+{
+	virtual ~IFileFuncImpl() {}
+	virtual void* Open(const char* filename_, const char* flags_) const = 0;
+	virtual void Close(void* file_) const = 0;
+	virtual int64 Read(void* file_, byte* mem_, uint64 size_) const = 0;
+};
 
 class IFileStream
 {
@@ -22,6 +37,7 @@ protected:
 	struct FileStreamImpl;
 	FileStreamImpl* impl;
 };
+
 
 class IMemoryStream
 {
@@ -37,7 +53,6 @@ protected:
 };
 
 
-//
 // readers
 //
 class FileStreamReader : public IDataStreamReader, public IFileStream
@@ -66,6 +81,7 @@ private:
 	uint64 size;
 	uint64 position;
 };
+
 
 class MemoryStreamReader : public IDataStreamReader, public IMemoryStream
 {
@@ -96,14 +112,6 @@ private:
 	IBuffer* memoryBuffer;
 };
 
-
-struct IFileFuncImpl
-{
-	virtual ~IFileFuncImpl() {}
-	virtual void* Open(const char* filename_, const char* flags_) const = 0;
-	virtual void Close(void* file_) const = 0;
-	virtual int64 Read(void* file_, byte* mem_, uint64 size_) const = 0;
-};
 
 class IMultiFileStreamReader : public IDataStreamReader, public IFileStream
 {
@@ -146,6 +154,7 @@ public:
 	MultiFileStreamReader(const std::vector<std::string>& fileNames_);
 };
 
+
 #ifndef DISABLE_GZ_STREAM
 class MultiFileStreamReaderGz : public IMultiFileStreamReader
 {
@@ -155,9 +164,6 @@ public:
 #endif
 
 
-
-
-//
 // writers
 //
 class FileStreamWriter : public IDataStreamWriter, public IFileStream

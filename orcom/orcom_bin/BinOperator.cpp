@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "Globals.h"
 
 #include <vector>
@@ -16,7 +24,7 @@ void FastqChunkReader::Run()
 {
 	uint64 partId = 0;
 
-#if 0										// TODO: test this routine
+#if 0				// TODO: test this routine
 	while (!partsStream->Eof())
 	{
 		DataChunk* part = NULL;
@@ -50,6 +58,7 @@ void FastqChunkReader::Run()
 	partsQueue->SetCompleted();
 }
 
+
 void BinChunkWriter::Run()
 {
 	int64 partId = 0;
@@ -64,6 +73,7 @@ void BinChunkWriter::Run()
 		part = NULL;
 	}
 }
+
 
 void BinEncoder::Run()
 {

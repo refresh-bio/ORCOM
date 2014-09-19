@@ -1,3 +1,12 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#include "Globals.h"
 #include "DnaParser.h"
 #include "DnaBlockData.h"
 
@@ -15,6 +24,7 @@ DnaParser::DnaParser()
 {
 	revRecord.dna = revBuffer;
 }
+
 
 uint64 DnaParser::ParseFrom(const DataChunk& chunk_, DataChunk& dnaBuffer_, std::vector<DnaRecord>& records_, uint64& rec_count_)
 {
@@ -78,6 +88,7 @@ bool DnaParser::ReadNextRecord(DnaRecord& rec_)
 	return true;
 }
 
+
 bool DnaParser::ReadLine(uchar *str_, uint32& len_, uint32& size_)
 {
 	uint32 i = 0;
@@ -109,6 +120,7 @@ bool DnaParser::ReadLine(uchar *str_, uint32& len_, uint32& size_)
 	return i > 0;
 }
 
+
 uint32 DnaParser::SkipLine()
 {
 	uint32 len = 0;
@@ -133,6 +145,7 @@ uint32 DnaParser::SkipLine()
 	return len;
 }
 
+
 uint64 DnaParser::ParseTo(const DnaBinBlock &dnaBins_, DataChunk &chunk_)
 {
 	buf = &chunk_.data;
@@ -155,6 +168,7 @@ uint64 DnaParser::ParseTo(const DnaBinBlock &dnaBins_, DataChunk &chunk_)
 	return memoryPos;
 }
 
+
 void DnaParser::WriteNextRecord(const DnaRecord& rec_)
 {
 	ASSERT(rec_.len > 0);
@@ -173,6 +187,7 @@ void DnaParser::WriteNextRecord(const DnaRecord& rec_)
 	memoryPos += rec_.len;
 	memory[memoryPos++] = '\n';
 }
+
 
 uint64 DnaParser::ParseTo(const DnaBin &dnaBin_, DataChunk &chunk_)
 {

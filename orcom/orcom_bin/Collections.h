@@ -1,5 +1,13 @@
-#ifndef COLLECTION_H
-#define COLLECTION_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_COLLECTION
+#define H_COLLECTION
 
 #include "Globals.h"
 
@@ -29,6 +37,7 @@ public:
 protected:
 	uint64 size;
 };
+
 
 template <class _T>
 class TConstCollection : public ICollection
@@ -73,6 +82,7 @@ public:
 protected:
 	std::vector<_T> elems;
 };
+
 
 template <class _T>
 class TConstPtrCollection : public ICollection
@@ -131,6 +141,7 @@ protected:
 	std::vector<_T*> elems;
 };
 
+
 struct DnaRecordStats
 {
 	uint32 minLen;
@@ -142,14 +153,10 @@ struct DnaRecordStats
 	{}
 };
 
+
 class DnaBin : public TConstCollection<DnaRecord>
 {
-	static const uint32 MinimumBinSize = 128;
-	typedef TConstCollection<DnaRecord> DnaColection;
-
 public:
-	DnaRecordStats stats;			// check me if stats are publically needed
-
 	DnaBin()
 		:	DnaColection(0)
 	{}
@@ -179,6 +186,17 @@ public:
 		Clear();
 	}
 
+	const DnaRecordStats& GetStats() const
+	{
+		return stats;
+	}
+
+	void SetStats(uint32 minLen_, uint32 maxLen_)
+	{
+		stats.minLen = minLen_;
+		stats.maxLen = maxLen_;
+	}
+
 	void UpdateStats(const DnaRecord& rec_)
 	{
 		stats.maxLen = MAX(stats.maxLen, rec_.len);
@@ -190,8 +208,16 @@ public:
 		stats.maxLen = 0;
 		stats.minLen = (uint32)-1;
 	}
+
+private:
+	typedef TConstCollection<DnaRecord> DnaColection;
+
+	static const uint32 MinimumBinSize = 128;
+
+	DnaRecordStats stats;
 };
 
 typedef TConstPtrCollection<DnaBin> DnaBinCollection;
 
-#endif // COLLECTION_H
+
+#endif // H_COLLECTION

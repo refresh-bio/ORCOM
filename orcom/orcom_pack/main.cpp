@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "../orcom_bin/Globals.h"
 
 #include <iostream>
@@ -31,12 +39,13 @@ int main(int argc_, const char* argv_[])
 	return dnarch2dna(args);
 }
 
+
 void usage()
 {
 	std::cerr << "Overlapping Reads COmpression with Minimizers\n";
 	std::cerr << "orcom_pack - DNA bins compression tool\n";
 	std::cerr << "Version: " << APP_VERSION << '\n';
-	std::cerr << "Authors: Sebastian Deorowicz, Szymon Grabowski and Lukasz Roguski\n\n";
+	std::cerr << "Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski\n\n";
 
 	std::cerr << "usage:\n\torcom_pack <e|d> [options] -i<input_file> -o<output_file>\n";
 	std::cerr << "options:\n";
@@ -72,6 +81,7 @@ int bin2dnarch(const InputArguments& args_)
 
 	return 0;
 }
+
 
 int dnarch2dna(const InputArguments& args_)
 {

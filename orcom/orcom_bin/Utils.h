@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_UTILS
 #define H_UTILS
 
@@ -14,6 +22,7 @@ struct TBitMask
 	static const uint64 Value = ((uint64)1 << (_TBitNum - 1)) | TBitMask<_TBitNum-1>::Value;
 };
 
+
 template <>
 struct TBitMask<0>
 {
@@ -26,6 +35,7 @@ struct TIsPow2
 {
 	static const bool Value = (_TNum & 1) == 0 && TIsPow2< (_TNum >> 1) >::Value;
 };
+
 
 template <>
 struct TIsPow2<1>
@@ -40,6 +50,7 @@ struct TPow
 	static const uint64 Value = _TNum * TPow<_TNum, _TPow - 1>::Value;
 };
 
+
 template <uint64 _TNum>
 struct TPow<_TNum, 0>
 {
@@ -53,13 +64,14 @@ struct TLog2
 	static const uint32 Value = TLog2< (_TNum >> 1) >::Value + 1;
 };
 
+
 template <>
 struct TLog2<1>
 {
 	static const uint32 Value = 0;
 };
-
 template <> struct TLog2<0> {};
+
 
 template <uint32 _TMaxLen>
 uint32 TStrLen(const char* str_)
@@ -72,6 +84,7 @@ uint32 TStrLen(const char* str_)
 	return _TMaxLen;
 }
 
+
 template <typename _T>
 inline void TSwap(_T& x_, _T& y_)
 {
@@ -79,6 +92,7 @@ inline void TSwap(_T& x_, _T& y_)
 	x_ = y_;
 	y_ = tmp;
 }
+
 
 template <typename _T>
 inline void TFree(_T*& p_)
@@ -89,6 +103,7 @@ inline void TFree(_T*& p_)
 		p_ = (_T*)0;
 	}
 }
+
 
 inline uint32 to_string(uchar* str, uint32 value)
 {
@@ -119,6 +134,7 @@ inline uint32 to_string(uchar* str, uint32 value)
 	return digits;
 }
 
+
 inline bool extend_string(uchar *&str, uint32 &size)
 {
 	uint32 new_size = size * 2;
@@ -134,6 +150,7 @@ inline bool extend_string(uchar *&str, uint32 &size)
 
 	return true;
 }
+
 
 inline bool extend_string_to(uchar *&str, uint32 &size, uint32 new_size)
 {
@@ -154,6 +171,7 @@ inline bool extend_string_to(uchar *&str, uint32 &size, uint32 new_size)
 	return true;
 }
 
+
 inline uint32 int_log(uint32 x, uint32 base)
 {
 	uint32 r = 0;
@@ -169,6 +187,7 @@ inline uint32 int_log(uint32 x, uint32 base)
 	return r;
 }
 
+
 inline uint32 to_num(const uchar *str, uint32 len)
 {
 	uint32 r = 0;
@@ -178,6 +197,7 @@ inline uint32 to_num(const uchar *str, uint32 len)
 
 	return r;
 }
+
 
 inline bool is_num(const uchar* str_, uint32 len_, uint32& val_)
 {
@@ -193,6 +213,7 @@ inline bool is_num(const uchar* str_, uint32 len_, uint32& val_)
 	return i == len_ && (len_ == 1 || str_[0] != '0');
 }
 
+
 inline uint32 bit_length(uint64 x)
 {
 	for (uint32 i = 0; i < 32; ++i)
@@ -204,4 +225,4 @@ inline uint32 bit_length(uint64 x)
 }
 
 
-#endif
+#endif // H_UTILS

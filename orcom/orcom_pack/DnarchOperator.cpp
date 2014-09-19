@@ -1,10 +1,20 @@
-#include "DnarchOperator.h"
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
 
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#include "../orcom_bin/Globals.h"
+
+#include "DnarchOperator.h"
 #include "BinFileExtractor.h"
 #include "DnarchFile.h"
 #include "DnaCompressor.h"
 #include "../orcom_bin/DnaPacker.h"
 #include "../orcom_bin/DnaParser.h"
+
 
 void BinPartsExtractor::Run()
 {
@@ -29,6 +39,7 @@ void BinPartsExtractor::Run()
 
 	partsQueue->SetCompleted();
 }
+
 
 void BinPartsCompressor::Run()
 {
@@ -81,8 +92,6 @@ void DnarchPartsWriter::Run()
 }
 
 
-
-
 void DnarchPartsReader::Run()
 {
 	int64 partId = 0;
@@ -102,6 +111,7 @@ void DnarchPartsReader::Run()
 	partsPool->Release(part);
 	partsQueue->SetCompleted();
 }
+
 
 void DnaPartsDecompressor::Run()
 {
@@ -126,6 +136,7 @@ void DnaPartsDecompressor::Run()
 	}
 	outPartsQueue->SetCompleted();
 }
+
 
 void RawDnaPartsWriter::Run()
 {

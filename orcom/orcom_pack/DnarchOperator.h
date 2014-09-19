@@ -1,5 +1,13 @@
-#ifndef DNARCHOPERATOR_H
-#define DNARCHOPERATOR_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DNARCHOPERATOR
+#define H_DNARCHOPERATOR
 
 #include "../orcom_bin/Globals.h"
 #include "../orcom_bin/DataPool.h"
@@ -13,7 +21,6 @@
 
 // operators for multi threaded processing
 //
-
 struct MinimizerBinPart : public BinaryBinBlock
 {
 	uint32 minimizer;
@@ -31,7 +38,6 @@ struct MinimizerBinPart : public BinaryBinBlock
 		dnaSize = 0;
 	}
 };
-
 
 typedef TDataPool<MinimizerBinPart> MinimizerPartsPool;
 typedef TDataPool<CompressedDnaBlock> CompressedDnaPartsPool;
@@ -61,6 +67,7 @@ private:
 	MinimizerPartsPool* partsPool;
 };
 
+
 class BinPartsCompressor : public IOperator
 {
 public:
@@ -87,6 +94,7 @@ protected:
 	CompressedDnaPartsPool* outPartsPool;
 };
 
+
 class DnarchPartsWriter : public IOperator
 {
 public:
@@ -103,9 +111,6 @@ private:
 	CompressedDnaPartsQueue* partsQueue;
 	CompressedDnaPartsPool* partsPool;
 };
-
-
-
 
 
 class DnarchPartsReader : public IOperator
@@ -126,6 +131,7 @@ private:
 	CompressedDnaPartsQueue* partsQueue;
 	CompressedDnaPartsPool* partsPool;
 };
+
 
 class DnaPartsDecompressor : public IOperator
 {
@@ -154,6 +160,7 @@ protected:
 	RawDnaPartsPool* outPartsPool;
 };
 
+
 class RawDnaPartsWriter : public IOperator
 {
 public:
@@ -174,4 +181,4 @@ private:
 };
 
 
-#endif // DNARCHOPERATOR_H
+#endif // H_DNARCHOPERATOR

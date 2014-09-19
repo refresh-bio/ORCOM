@@ -1,5 +1,13 @@
-#ifndef DATAPOOL_H
-#define DATAPOOL_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DATAPOOL
+#define H_DATAPOOL
 
 #include "Globals.h"
 
@@ -7,22 +15,12 @@
 
 #include "Thread.h"
 
+
 template <class _TDataType>
 class TDataPool
 {
 	typedef _TDataType DataType;
 	typedef std::vector<DataType*> part_pool;
-
-	const uint32 maxPartNum;
-	const uint32 bufferPartSize;
-	uint32 partNum;
-
-	part_pool availablePartsPool;
-	part_pool allocatedPartsPool;
-
-	mt::mutex mutex;
-	mt::condition_variable partsAvailableCondition;
-
 
 public:
 	static const uint32 DefaultMaxPartNum = 32;
@@ -93,7 +91,18 @@ public:
 
 		partsAvailableCondition.notify_one();
 	}
+
+private:
+	const uint32 maxPartNum;
+	const uint32 bufferPartSize;
+	uint32 partNum;
+
+	part_pool availablePartsPool;
+	part_pool allocatedPartsPool;
+
+	mt::mutex mutex;
+	mt::condition_variable partsAvailableCondition;
 };
 
 
-#endif // DATAPOOL_H
+#endif // H_DATAPOOL

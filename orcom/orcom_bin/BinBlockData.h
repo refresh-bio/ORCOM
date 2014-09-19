@@ -1,5 +1,13 @@
-#ifndef BINBLOCKDATA_H
-#define BINBLOCKDATA_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BINBLOCKDATA
+#define H_BINBLOCKDATA
 
 #include "Globals.h"
 
@@ -63,6 +71,7 @@ struct BinaryBinBlock
 	}
 };
 
+
 struct BinaryBin
 {
 	static const uint64 DefaultMetaBufferSize = 1 << 6;
@@ -94,5 +103,4 @@ struct BinaryBin
 	}
 };
 
-
-#endif // BINBLOCKDATA_H
+#endif // H_BINBLOCKDATA

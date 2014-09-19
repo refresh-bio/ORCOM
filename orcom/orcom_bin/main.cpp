@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #include "Globals.h"
 
 #include <iostream>
@@ -7,6 +15,7 @@
 #include "BinModule.h"
 #include "Utils.h"
 #include "Thread.h"
+
 
 uint32 InputArguments::AvailableCoresNumber = mt::thread::hardware_concurrency();
 uint32 InputArguments::DefaultThreadNumber = MIN(8, InputArguments::AvailableCoresNumber);
@@ -29,12 +38,13 @@ int main(int argc_, const char* argv_[])
 	return bin2dna(args);
 }
 
+
 void usage()
 {
 	std::cerr << "Overlapping Reads COmpression with Minimizers\n";
 	std::cerr << "orcom_bin - DNA records binning tool\n";
 	std::cerr << "Version: " << APP_VERSION << '\n';
-	std::cerr << "Authors: Sebastian Deorowicz, Szymon Grabowski and Lukasz Roguski\n\n";
+	std::cerr << "Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski\n\n";
 
 	std::cerr << "usage:\n\torcom_bin <e|d> [options]\n";
 	std::cerr << "options:\n";

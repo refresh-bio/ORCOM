@@ -1,5 +1,13 @@
-#ifndef DNARCHMODULE_H
-#define DNARCHMODULE_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DNARCHMODULE
+#define H_DNARCHMODULE
 
 #include "../orcom_bin/Globals.h"
 
@@ -15,4 +23,5 @@ public:
 	void Dnarch2Dna(const std::string& inDnarchFile_, const std::string& outDnaFile_, uint32 threadsNum_ = 1);
 };
 
-#endif // DNARCHMODULE_H
+
+#endif // H_DNARCHMODULE

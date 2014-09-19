@@ -1,11 +1,20 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_BUFFER
+#define H_BUFFER
 
 #include "Globals.h"
 
 #include <algorithm>
 
 #include "Utils.h"
+
 
 class IBuffer
 {
@@ -125,7 +134,7 @@ private:
 
 struct DataChunk
 {
-	static const uint64 DefaultBufferSize = 1 << 20;		// 1 << 22
+	static const uint64 DefaultBufferSize = 1 << 20;
 
 	Buffer data;
 	uint64 size;
@@ -142,4 +151,4 @@ struct DataChunk
 };
 
 
-#endif // BUFFER_H
+#endif // H_BUFFER

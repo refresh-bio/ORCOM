@@ -1,3 +1,11 @@
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
 #ifndef H_DATAQUEUE
 #define H_DATAQUEUE
 
@@ -14,21 +22,6 @@ class TDataQueue
 	typedef _TDataType DataType;
 	typedef std::pair<int64, DataType*> part_pair;
 	typedef std::deque<part_pair> part_queue;
-
-	inline static bool sortByPartId(const part_pair& p1_, const part_pair& p2_)
-	{
-		return p1_.first < p2_.first;
-	}
-
-	const uint32 threadNum;
-	const uint32 maxPartNum;
-	uint64 completedThreadMask;
-	uint64 currentThreadMask;
-	part_queue parts;
-
-	mt::mutex mutex;
-	mt::condition_variable queueFullCondition;
-	mt::condition_variable queueEmptyCondition;
 
 public:
 	static const uint32 DefaultMaxPartNum = 64;
@@ -112,6 +105,23 @@ public:
 		ASSERT(parts.size() == 0);
 		currentThreadMask = 0;
 	}
+
+private:
+	const uint32 threadNum;
+	const uint32 maxPartNum;
+	uint64 completedThreadMask;
+	uint64 currentThreadMask;
+	part_queue parts;
+
+	mt::mutex mutex;
+	mt::condition_variable queueFullCondition;
+	mt::condition_variable queueEmptyCondition;
+
+	inline static bool sortByPartId(const part_pair& p1_, const part_pair& p2_)
+	{
+		return p1_.first < p2_.first;
+	}
+
 };
 
-#endif // DATA_QUEUE_H
+#endif // H_DATAQUEUE

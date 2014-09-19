@@ -1,10 +1,18 @@
-#ifndef DNAPACKER_H
-#define DNAPACKER_H
+/*
+  This file is a part of ORCOM software distributed under GNU GPL 2 licence.
+  Homepage:	http://sun.aei.polsl.pl/orcom
+  Github:	http://github.com/lrog/orcom
+
+  Authors: Sebastian Deorowicz, Szymon Grabowski and Lucas Roguski
+*/
+
+#ifndef H_DNAPACKER
+#define H_DNAPACKER
 
 #include "Globals.h"
 #include "Params.h"
-
 #include "BinBlockData.h"
+
 
 class DnaPacker
 {
@@ -13,7 +21,8 @@ public:
 
 	void PackToBins(const DnaBinBlock& dnaBins_, BinaryBinBlock& binBins_);
 	void UnpackFromBins(const BinaryBinBlock& binBins_, DnaBinBlock& dnaBins_, DataChunk& dnaChunk_);
-	void UnpackFromBin(const BinaryBinBlock& binBin_, DnaBin& dnaBin_, uint32 minimizerId_, DataChunk& dnaChunk_, bool append_ = false);
+	void UnpackFromBin(const BinaryBinBlock& binBin_, DnaBin& dnaBin_, uint32 minimizerId_,
+					   DataChunk& dnaChunk_, bool append_ = false);
 
 private:
 	struct BinPackSettings
@@ -47,10 +56,13 @@ private:
 	void UnpackFromBin(const BinaryBinDescriptor& desc_, DnaBin& dnaBin_, DataChunk& dnaChunk_,
 					   BitMemoryReader& metaReader_, BitMemoryReader& dnaReader_, uint32 minimizerId_);
 
-	void StoreNextRecord(const DnaRecord& rec_, BitMemoryWriter& binWriter_, BitMemoryWriter& dnaWriter_, const BinPackSettings& settings_);
-	bool ReadNextRecord(BitMemoryReader& binReader_, BitMemoryReader& dnaReader_, DnaRecord& rec_, const BinPackSettings& settings_);
+	void StoreNextRecord(const DnaRecord& rec_, BitMemoryWriter& binWriter_,
+						 BitMemoryWriter& dnaWriter_, const BinPackSettings& settings_);
+
+	bool ReadNextRecord(BitMemoryReader& binReader_, BitMemoryReader& dnaReader_,
+						DnaRecord& rec_, const BinPackSettings& settings_);
 
 };
 
 
-#endif // DNAPACKER_H
+#endif // H_DNAPACKER

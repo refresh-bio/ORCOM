@@ -1,9 +1,11 @@
 /****************************************************************************
  *  This file is part of PPMd library                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
+ *  Original code designed and distributed to public domain                 *
+ *  by Dmitry Shkarin 1997, 1999-2001, 2006, 2013                           *
  *  1999-2001, 2006, 2013                                                   *
  *  Contents: memory allocation routines                                    *
  ****************************************************************************/
+
 #ifndef _H_SUBALLOC_
 #define _H_SUBALLOC_
 

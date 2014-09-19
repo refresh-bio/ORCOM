@@ -2,6 +2,7 @@
  *  This file is part of PPMd library                                       *
  *  Contents: Memory Byte Stream wrapper for I/O operations                 *
  *  Comments: exchanges the raw I/O routines used in original PPMd project  *
+ *  Author: Lucas Roguski, 2014                                             *
  ****************************************************************************/
 
 #ifndef _BYTESTREAM_H_
