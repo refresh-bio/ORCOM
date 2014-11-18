@@ -8,11 +8,13 @@
 
 #include "../orcom_bin/Globals.h"
 
-#include <iostream>
-
 #include "BinFileExtractor.h"
 #include "../orcom_bin/Exception.h"
 
+
+#if (DEV_DEBUG_PRINT)
+#	include <iostream>
+#endif
 
 struct BlockDescriptorComparator
 {
@@ -141,6 +143,20 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 		fileFooter.rawDnaSizes.swap(t4);
 	}
 
+
+#if (DEV_DEBUG_PRINT)
+	std::cerr << "--------.--------*--------.--------\n";
+	std::cerr << "Descriptors count: " << blockDescriptors.size() << '\n';
+	std::cerr << "Minimum bin size: " << minBinSize << '\n';
+	std::cerr << "Bin sizes:\n";
+
+	for (uint64 i = 0; i < blockDescriptors.size(); ++i)
+	{
+		const BlockDescriptor& b = blockDescriptors[i];
+		std::cerr << "[ " << i << " ] " << b.recordsCount << '\n';
+	}
+	std::cerr << "[ " << blockDescriptors.size() << " ] " << nBlockDescriptor.recordsCount << std::endl;
+#endif
 
 	// sort descriptors by size
 	//

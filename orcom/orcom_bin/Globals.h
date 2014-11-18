@@ -13,6 +13,8 @@
 #	define DEBUG 1
 #endif
 
+#define DEV_DEBUG_PRINT 1
+
 
 // Visual Studio warning supression
 //
@@ -50,7 +52,7 @@
 
 // app version control
 //
-#define APP_VERSION						"1.0a"
+#define APP_VERSION						"1.0rc"
 
 
 // experimental features

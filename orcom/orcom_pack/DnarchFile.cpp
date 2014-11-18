@@ -14,6 +14,9 @@
 #include "CompressedBlockData.h"
 #include "../orcom_bin/Exception.h"
 
+#if (DEV_DEBUG_PRINT)
+#	include <iostream>
+#endif
 
 DnarchFileWriter::DnarchFileWriter()
 	:	metaStream(NULL)
@@ -77,6 +80,20 @@ void DnarchFileWriter::FinishCompress()
 {
 	ASSERT(metaStream != NULL);
 	ASSERT(dataStream != NULL);
+
+
+#if (DEV_DEBUG_PRINT)
+	std::cerr << "--------.--------*--------.--------\n";
+	std::cerr << "Compressed stream sizes: \n";
+	std::cerr << "Flag " << streamSizes[DnaCompressedBin::FlagBuffer] << '\n';
+	std::cerr << "LetterX " << streamSizes[DnaCompressedBin::LetterXBuffer] << '\n';
+	std::cerr << "Rev " << streamSizes[DnaCompressedBin::RevBuffer] << '\n';
+	std::cerr << "HardReads " << streamSizes[DnaCompressedBin::HardReadsBuffer] << '\n';
+	std::cerr << "LzId " << streamSizes[DnaCompressedBin::LzIdBuffer] << '\n';
+	std::cerr << "Shift " << streamSizes[DnaCompressedBin::ShiftBuffer] << '\n';
+	std::cerr << "Len " << streamSizes[DnaCompressedBin::LenBuffer] << '\n';
+	std::cerr << "Match " << streamSizes[DnaCompressedBin::MatchBuffer] << std::endl;
+#endif
 
 	// prepare header and write footer
 	//
