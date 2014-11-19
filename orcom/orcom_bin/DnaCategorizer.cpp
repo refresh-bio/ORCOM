@@ -307,7 +307,7 @@ bool DnaCategorizer::IsMinimizerValid(uint32 minim_, uint32 mLen_)
 	{
 		uint32 x = minim_ & excludeMask;
 
-		for (uint32 j = 0; j < excludeLen; ++j)
+		for (uint32 j = 0; j < 4; ++j)
 			hasInvalidSeq |= (x == symbolExcludeTable[j]);
 
 		minim_ >>= 2;

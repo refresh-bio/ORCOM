@@ -220,7 +220,7 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_)
 		return false;
 	}
 
-	if (outArgs_.threadsNum == 0)
+	if (outArgs_.threadsNum == 0 || outArgs_.threadsNum > 64)
 	{
 		std::cerr << "Error: invalid number of threads specified\n";
 		return false;

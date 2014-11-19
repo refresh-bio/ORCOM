@@ -42,7 +42,6 @@ struct InputArguments
 	static InputArguments Default()
 	{
 		InputArguments args;
-		args.params = CompressorParams::Default();
 		return args;
 	}
 };
