@@ -12,6 +12,7 @@
 #include "Globals.h"
 
 #include <vector>
+#include <map>
 
 #include "DnaRecord.h"
 
@@ -154,25 +155,42 @@ struct DnaRecordStats
 };
 
 
-class DnaBin : public TConstCollection<DnaRecord>
+class DnaBin
 {
 public:
 	DnaBin()
-		:	DnaColection(0)
+		:	size(0)
 	{}
 
 	void Insert(const DnaRecord& rec_)
 	{
 		ASSERT(rec_.len > 0);
 
-		if (elems.size() == 0)
-			elems.resize(MinimumBinSize);
-		else if (elems.size() <= size)
-			elems.resize(size + (size >> 4));
-
+		if (elems.size() <= size)
+		{
+			if (elems.size() == 0)
+				elems.resize(MinimumBinSize);
+			else if (elems.size() < ThresholdBinSize)
+				elems.resize(size * 2);
+			else
+				elems.resize(size + (size / 4));
+		}
 		elems[size++] = rec_;
 
+		/*
+		if (elems.size() <= size)
+			elems.push_back(rec_);
+		else
+			elems[size] = rec_;
+		size++;
+		*/
+
 		UpdateStats(rec_);
+	}
+
+	uint64 Size() const
+	{
+		return size;
 	}
 
 	void Clear()
@@ -181,9 +199,23 @@ public:
 		ClearStats();
 	}
 
-	void Reset()
+	void Resize(uint64 size_)
 	{
-		Clear();
+		if (elems.size() < size_)
+			elems.resize(size_);
+		size = size_;
+	}
+
+	const DnaRecord& operator[](uint64 i_) const
+	{
+		ASSERT(i_ < size);
+		return elems[i_];
+	}
+
+	DnaRecord& operator[](uint64 i_)
+	{
+		ASSERT(i_ < size);
+		return elems[i_];
 	}
 
 	const DnaRecordStats& GetStats() const
@@ -209,15 +241,94 @@ public:
 		stats.minLen = (uint32)-1;
 	}
 
-private:
-	typedef TConstCollection<DnaRecord> DnaColection;
+	std::vector<DnaRecord>::iterator Begin()
+	{
+		return elems.begin();
+	}
 
-	static const uint32 MinimumBinSize = 128;
+	std::vector<DnaRecord>::iterator End()
+	{
+		return elems.begin() + size;
+	}
+
+private:
+	static const uint32 MinimumBinSize = 32;
+	static const uint32 ThresholdBinSize = 512;
+
+	std::vector<DnaRecord> elems;
+	uint64 size;
 
 	DnaRecordStats stats;
 };
 
-typedef TConstPtrCollection<DnaBin> DnaBinCollection;
+
+class DnaBinCollection
+{
+public:
+	typedef std::map<uint32, DnaBin> BinMap;
+	typedef BinMap::iterator Iterator;
+	typedef BinMap::const_iterator ConstIterator;
+
+	DnaBinCollection()
+	{}
+
+	BinMap& GetBins()
+	{
+		return bins;
+	}
+
+	const BinMap& GetBins() const
+	{
+		return bins;
+	}
+
+	Iterator Begin()
+	{
+		return bins.begin();
+	}
+
+	Iterator End()
+	{
+		return bins.end();
+	}
+
+	ConstIterator CBegin() const
+	{
+		return bins.begin();
+	}
+
+	ConstIterator CEnd() const
+	{
+		return bins.end();
+	}
+
+	const DnaBin& operator[](uint32 i_) const
+	{
+		ASSERT(bins.count(i_) > 0);
+		return bins.at(i_);
+	}
+
+	DnaBin& operator[](uint32 i_)
+	{
+		return bins[i_];
+	}
+
+	void Clear()
+	{
+		//bins.clear();
+
+		for (BinMap::iterator i = bins.begin(); i != bins.end(); ++i)
+			i->second.Clear();
+	}
+
+	bool Exists(uint32 id_) const
+	{
+		return bins.count(id_) > 0 && bins.at(id_).Size() > 0;
+	}
+
+private:
+	BinMap bins;
+};
 
 
 #endif // H_COLLECTION

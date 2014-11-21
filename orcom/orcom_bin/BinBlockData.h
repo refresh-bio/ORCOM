@@ -12,6 +12,7 @@
 #include "Globals.h"
 
 #include <vector>
+#include <map>
 
 #include "Buffer.h"
 #include "Collections.h"
@@ -45,10 +46,12 @@ typedef TBinaryBinDescriptor<uint32> BinaryBinDescriptor;
 
 struct BinaryBinBlock
 {
+	typedef std::map<uint32, BinaryBinDescriptor> DescriptorMap;
+
 	static const uint64 DefaultMetaBufferSize = 1 << 6;
 	static const uint64 DefaultDnaBufferSize = 1 << 8;
 
-	std::vector<BinaryBinDescriptor> descriptors;
+	DescriptorMap descriptors;
 	Buffer metaData;
 	Buffer dnaData;
 
@@ -60,14 +63,21 @@ struct BinaryBinBlock
 		:	metaData(metaBufferSize_)
 		,	dnaData(dnaBufferSize_)
 	{
-		Reset();
+		Clear();
 	}
 
-	void Reset()
+	void Clear()
 	{
 		metaSize = 0;
 		dnaSize = 0;
 		rawDnaSize = 0;
+
+		descriptors.clear();		// CHECKME!!!
+	}
+
+	void Reset()		// for compatibility with queues
+	{
+		Clear();
 	}
 };
 

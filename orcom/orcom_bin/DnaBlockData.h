@@ -18,14 +18,13 @@ struct DnaBinBlock
 	DnaBinCollection stdBins;
 	DnaBin nBin;
 
-	DnaBinBlock(uint32 stdBinSize_ = 0)
-		:	stdBins(stdBinSize_)
+	DnaBinBlock()
 	{}
 
-	void Reset()
+	void Clear()
 	{
-		stdBins.Reset();
-		nBin.Reset();
+		stdBins.Clear();
+		nBin.Clear();
 	}
 };
 

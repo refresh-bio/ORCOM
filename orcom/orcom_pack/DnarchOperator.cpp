@@ -60,7 +60,7 @@ void BinPartsCompressor::Run()
 		CompressedDnaBlock* outPart = NULL;
 		outPartsPool->Acquire(outPart);
 
-		outPart->workBuffers.dnaBin.Reset();
+		outPart->workBuffers.dnaBin.Clear();
 
 		packer.UnpackFromBin(*inPart, outPart->workBuffers.dnaBin, minimizer, outPart->workBuffers.dnaBuffer);
 

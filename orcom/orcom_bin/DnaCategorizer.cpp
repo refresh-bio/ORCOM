@@ -27,8 +27,6 @@ DnaCategorizer::DnaCategorizer(const MinimizerParameters& params_, const Categor
 	std::fill(symbolIdxTable, symbolIdxTable + 128, -1);
 	for (uint32 i = 0; i < 5; ++i)
 		symbolIdxTable[(int32)params.dnaSymbolOrder[i]] = i;
-
-	freqTable.resize(maxShortMinimValue, 0);
 }
 
 
@@ -39,11 +37,7 @@ void DnaCategorizer::Categorize(std::vector<DnaRecord>& records_, uint64 records
 
 	// crear bins
 	//
-	for (uint32 i = 0; i < bin_.stdBins.Size(); ++i)
-		bin_.stdBins[i].Clear();
-	bin_.nBin.Clear();
-
-	std::fill(freqTable.begin(), freqTable.end(), 0);
+	bin_.Clear();
 
 	// process records
 	//
@@ -54,9 +48,9 @@ void DnaCategorizer::Categorize(std::vector<DnaRecord>& records_, uint64 records
 	FindMinimizerPositions(bin_.stdBins);
 
 	DnaRecordComparator comparator(params.signatureLen - params.signatureSuffixLen);
-	for (uint32 i = 0; i < bin_.stdBins.Size(); ++i)
+	for (DnaBinCollection::Iterator i = bin_.stdBins.Begin(); i != bin_.stdBins.End(); ++i)
 	{
-		DnaBin& db = bin_.stdBins[i];
+		DnaBin& db = i->second;
 		if (db.Size() > 0)
 			std::sort(db.Begin(), db.End(), comparator);
 	}
@@ -142,11 +136,14 @@ void DnaCategorizer::DistributeToBins(std::vector<DnaRecord>& records_, uint64 r
 
 	// re-balance bins
 	//
-	for (uint32 i = 0; i < bins_.Size(); ++i)
+	for (DnaBinCollection::Iterator i = bins_.Begin(); i != bins_.End(); )
 	{
-		DnaBin& db = bins_[i];
+		DnaBin& db = i->second;
 		if (db.Size() == 0 || db.Size() >= catParams.minBlockBinSize)
+		{
+			i++;
 			continue;
+		}
 
 		for (uint32 j = 0; j < db.Size(); ++j)
 		{
@@ -167,7 +164,7 @@ void DnaCategorizer::DistributeToBins(std::vector<DnaRecord>& records_, uint64 r
 			for ( ; mit != mins.end(); ++mit)
 			{
 				const uint32 m = mit->first;
-				if (bins_[m].Size() >= catParams.minBlockBinSize)// && bins_[m].Size() < maxBinSize)
+				if (bins_.Exists(m) && bins_[m].Size() >= catParams.minBlockBinSize)// && bins_[m].Size() < maxBinSize)
 				{
 					r.minimizerPos = mit->second;
 					bins_[m].Insert(r);
@@ -181,24 +178,30 @@ void DnaCategorizer::DistributeToBins(std::vector<DnaRecord>& records_, uint64 r
 				nBin_.Insert(r);
 			}
 		}
+
 		db.Clear();
+
+		bins_.GetBins().erase(i++);
 	}
 }
 
 
 void DnaCategorizer::FindMinimizerPositions(DnaBinCollection& bins_)
 {
-	for (uint32 i = 0; i < params.TotalMinimizersCount(); ++i)
+	for (DnaBinCollection::Iterator i = bins_.Begin(); i != bins_.End(); ++i)
 	{
-		if (bins_[i].Size() == 0)
+		DnaBin& db = i->second;
+		const uint32 minim = i->first;
+
+		if (db.Size() == 0)
 			continue;
 
 		char minString[64] = {0};
-		params.GenerateMinimizer(i, minString);
+		params.GenerateMinimizer(minim, minString);
 
-		for (uint32 j = 0; j < bins_[i].Size(); ++j)
+		for (uint32 j = 0; j < db.Size(); ++j)
 		{
-			DnaRecord& r = bins_[i][j];
+			DnaRecord& r = db[j];
 #if EXP_USE_RC_ADV
 			const char* beg = r.dna + (r.reverse ? params.skipZoneLen : 0);
 			const char* end = r.dna + r.len - (r.reverse ? params.skipZoneLen : 0);

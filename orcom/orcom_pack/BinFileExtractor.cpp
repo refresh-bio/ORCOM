@@ -72,10 +72,9 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 
 	// prepare block descriptors
 	//
+	std::map<uint32, BlockDescriptor> descriptorMap;
+
 	const uint64 binsPerBlock = fileFooter.params.minimizer.TotalMinimizersCount();
-	blockDescriptors.resize(binsPerBlock);
-	for (uint32 i = 0; i < binsPerBlock; ++i)
-		blockDescriptors[i].signature = i;
 	nBlockDescriptor.signature = binsPerBlock;
 
 	currentNonEmptyBlockId = 0;		// we can try to reuse this
@@ -88,6 +87,9 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 	// read block descriptors
 	//
 	uint64 rawDnaStreamSize = 0;
+
+	uint64 totalDnaSize = 0;
+	uint64 totalRawSize = 0;
 
 	for (uint64 i = 0; i < fileFooter.metaBinSizes.size(); ++i)
 	{
@@ -114,7 +116,7 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 		// shall 32 bits be enough here?
 		BlockDescriptor* blockDesc;
 		if (minId != binsPerBlock)
-			blockDesc = &blockDescriptors[minId];
+			blockDesc = &descriptorMap[minId];
 		else
 			blockDesc = &nBlockDescriptor;
 
@@ -130,6 +132,9 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 		rawDnaStreamSize += subDesc.rawDnaSize;
 
 		currentNonEmptyBlockId++;
+
+		totalDnaSize += subDesc.dnaSize;
+		totalRawSize += subDesc.rawDnaSize;
 	}
 
 
@@ -143,6 +148,31 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 		fileFooter.rawDnaSizes.swap(t4);
 	}
 
+	// convert descriptor map to internal vector of block descriptors and swap the sub blocks
+	//
+	{
+		blockDescriptors.resize(descriptorMap.size());
+		uint32 descId = 0;
+		for (std::map<uint32, BlockDescriptor>::iterator i = descriptorMap.begin();
+			 i != descriptorMap.end(); ++i)
+		{
+			const uint32 signature = i->first;
+			BlockDescriptor& mapDesc = i->second;
+			BlockDescriptor& desc = blockDescriptors[descId++];
+			desc.signature = signature;
+			desc.dnaSize = mapDesc.dnaSize;
+			desc.metaSize = mapDesc.metaSize;
+			desc.rawDnaSize = mapDesc.rawDnaSize;
+			desc.recordsCount = mapDesc.recordsCount;
+			desc.subBlocks.swap(mapDesc.subBlocks);
+		}
+	}
+
+
+	// sort descriptors by size
+	//
+	std::sort(blockDescriptors.begin(), blockDescriptors.end(), BlockDescriptorComparator());
+
 
 #if (DEV_DEBUG_PRINT)
 	std::cerr << "--------.--------*--------.--------\n";
@@ -152,15 +182,11 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 
 	for (uint64 i = 0; i < blockDescriptors.size(); ++i)
 	{
-		const BlockDescriptor& b = blockDescriptors[i];
-		std::cerr << "[ " << i << " ] " << b.recordsCount << '\n';
+		const BlockDescriptor& desc = blockDescriptors[i];
+		std::cerr << "[ " << desc.signature << " ] " << desc.recordsCount << '\n';
 	}
-	std::cerr << "[ " << blockDescriptors.size() << " ] " << nBlockDescriptor.recordsCount << std::endl;
+	std::cerr << "[ " << nBlockDescriptor.signature << " ] " << nBlockDescriptor.recordsCount << std::endl;
 #endif
-
-	// sort descriptors by size
-	//
-	std::sort(blockDescriptors.begin(), blockDescriptors.end(), BlockDescriptorComparator());
 
 
 	// partition
@@ -199,7 +225,7 @@ void BinFileExtractor::StartDecompress(const std::string &fileName_, BinModuleCo
 
 bool BinFileExtractor::ExtractNextStdBin(BinaryBinBlock &bin_, uint32 &minimizerId_)
 {
-	bin_.Reset();
+	bin_.Clear();
 	bin_.descriptors.clear();
 
 	// have we reached N bin?
@@ -222,7 +248,7 @@ bool BinFileExtractor::ExtractNextStdBin(BinaryBinBlock &bin_, uint32 &minimizer
 
 bool BinFileExtractor::ExtractNextSmallBin(BinaryBinBlock &bin_, uint32 &minimizerId_)
 {
-	bin_.Reset();
+	bin_.Clear();
 	bin_.descriptors.clear();
 
 	// have we reached N bin?
@@ -245,7 +271,7 @@ bool BinFileExtractor::ExtractNextSmallBin(BinaryBinBlock &bin_, uint32 &minimiz
 
 bool BinFileExtractor::ExtractNBin(BinaryBinBlock &bin_, uint32& minimizerId_)
 {
-	bin_.Reset();
+	bin_.Clear();
 	bin_.descriptors.clear();
 
 	ExtractNextBin(nBlockDescriptor, bin_);
@@ -281,6 +307,7 @@ void BinFileExtractor::ExtractNextBin(const BlockDescriptor &desc_, BinaryBinBlo
 		bin_.dnaSize += subBlock.dnaSize;
 		bin_.rawDnaSize += subBlock.rawDnaSize;
 
-		bin_.descriptors.push_back(subBlock);
+		// here we need to insert descriptors into the map treating it as a vector...
+		bin_.descriptors.insert(std::make_pair(bin_.descriptors.size(), subBlock));
 	}
 }

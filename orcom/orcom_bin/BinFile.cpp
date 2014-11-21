@@ -72,23 +72,30 @@ void BinFileWriter::StartCompress(const std::string& fileName_, const BinModuleC
 void BinFileWriter::WriteNextBlock(const BinaryBinBlock* block_)
 {
 	ASSERT(block_ != NULL);
-	ASSERT(block_->descriptors.size() == minimizersCount + 1);
 
-	for (uint32 i = 0; i < block_->descriptors.size(); ++i)
+	for (uint32 i = 0; i < minimizersCount + 1; ++i)
 	{
-		const BinaryBinDescriptor& desc = block_->descriptors[i];
+		uint32 metaSize = 0;
 
-		fileFooter.metaBinSizes.push_back(desc.metaSize);			// we can optimize this further -- to use bit map
-		if (desc.metaSize > 0)
+		if (block_->descriptors.count(i) > 0)
 		{
-			ASSERT(desc.recordsCount > 0);
+			const BinaryBinDescriptor& desc = block_->descriptors.at(i);
 
-			fileHeader.recordsCount += desc.recordsCount;
+			if (desc.metaSize > 0)
+			{
+				ASSERT(desc.recordsCount > 0);
 
-			fileFooter.dnaBinSizes.push_back(desc.dnaSize);
-			fileFooter.recordsCounts.push_back(desc.recordsCount);
-			fileFooter.rawDnaSizes.push_back(desc.rawDnaSize);
+				fileHeader.recordsCount += desc.recordsCount;
+
+				fileFooter.dnaBinSizes.push_back(desc.dnaSize);
+				fileFooter.recordsCounts.push_back(desc.recordsCount);
+				fileFooter.rawDnaSizes.push_back(desc.rawDnaSize);
+			}
+
+			metaSize = desc.metaSize;
 		}
+
+		fileFooter.metaBinSizes.push_back(metaSize);			// we can optimize this further -- to use bit map
 	}
 
 	metaStream->Write(block_->metaData.Pointer(), block_->metaSize);
@@ -268,28 +275,22 @@ bool BinFileReader::ReadNextBlock(BinaryBinBlock* block_)
 	if (currentBlockId == fileHeader.blockCount)
 		return false;
 
-	if (block_->descriptors.size() < minimizersCount + 1)
-		block_->descriptors.resize(minimizersCount + 1);
-
 	uint64 blockIdx = currentBlockId * (minimizersCount + 1);
 	uint64 totalMetaSize = 0;
 	uint64 totalDnaSize = 0;
 	uint64 totalRawDnaSize = 0;
 
+	block_->Clear();
+
 	for (uint32 i = 0; i < minimizersCount + 1; ++i)
 	{
 		uint64 binIdx = blockIdx + i;
 
+		if (fileFooter.metaBinSizes[binIdx] == 0)
+			continue;
+
 		BinaryBinDescriptor& desc = block_->descriptors[i];
 		desc.metaSize = fileFooter.metaBinSizes[binIdx];
-
-		if (desc.metaSize == 0)
-		{
-			desc.dnaSize = 0;
-			desc.recordsCount = 0;
-			desc.rawDnaSize = 0;
-			continue;
-		}
 
 		ASSERT(currentNonEmptyBlockId < fileFooter.dnaBinSizes.size());
 		desc.dnaSize = fileFooter.dnaBinSizes[currentNonEmptyBlockId];

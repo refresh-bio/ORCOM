@@ -36,8 +36,6 @@ private:
 
 	char symbolIdxTable[128];
 
-	std::vector<uint64> freqTable;
-
 	void DistributeToBins(std::vector<DnaRecord>& records_, uint64 recordsCount_, DnaBinCollection& bins_, DnaBin& nBin_);
 	void FindMinimizerPositions(DnaBinCollection& bins_);
 

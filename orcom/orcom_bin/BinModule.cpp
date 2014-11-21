@@ -124,7 +124,7 @@ void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const s
 		std::vector<DnaRecord> records;
 		records.resize(1 << 10);
 
-		DnaBinBlock dnaBins(minimizersCount);
+		DnaBinBlock dnaBins;
 		BinaryBinBlock binBins;
 		DataChunk dnaBuffer;
 
@@ -155,14 +155,13 @@ void BinModule::Bin2Dna(const std::string &inBinFile_, const std::string &outDna
 	BinFileReader binFile;
 
 	binFile.StartDecompress(inBinFile_, config);
-	uint32 minimizersCount = config.minimizer.TotalMinimizersCount();
 
 	DnaFileWriter dnaFile(outDnaFile_);
 	DataChunk fastqChunk(config.fastqBlockSize >> 1);			// WARNING! --- here can be a BUG
 	DnaPacker packer(config.minimizer);
 	DnaParser parser;
 
-	DnaBinBlock dnaBins(minimizersCount);
+	DnaBinBlock dnaBins;
 	BinaryBinBlock binBins;
 	DataChunk dnaBuffer;
 

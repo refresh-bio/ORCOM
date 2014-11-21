@@ -35,29 +35,39 @@ DnaPacker::DnaPacker(const MinimizerParameters& params_)
 
 void DnaPacker::PackToBins(const DnaBinBlock& dnaBins_, BinaryBinBlock& binBins_)
 {
-	if (binBins_.descriptors.size() < dnaBins_.stdBins.Size() + 1)
-		binBins_.descriptors.resize(dnaBins_.stdBins.Size() + 1);
+	binBins_.Clear();
 
 	BitMemoryWriter metaWriter(binBins_.metaData);
 	BitMemoryWriter dnaWriter(binBins_.dnaData);
 
 	// store standard bins
 	//
-	for (uint32 binId = 0; binId < dnaBins_.stdBins.Size(); ++binId)
+	ASSERT(!dnaBins_.stdBins.Exists(params.TotalMinimizersCount()));
+	for (DnaBinCollection::ConstIterator i = dnaBins_.stdBins.CBegin(); i != dnaBins_.stdBins.CEnd(); ++i)
 	{
+		const uint32 binId = i->first;
+		const DnaBin& db = i->second;
+
+		if (db.Size() == 0)
+			continue;
+
 		BinaryBinDescriptor& desc = binBins_.descriptors[binId];
 		desc.Clear();
 
-		PackToBin(dnaBins_.stdBins[binId], metaWriter, dnaWriter, desc, false);
+		PackToBin(db, metaWriter, dnaWriter, desc, false);
 		binBins_.rawDnaSize += desc.rawDnaSize;
 	}
 
 	// pack last N bin
 	//
 	{
-		BinaryBinDescriptor& nDesc = binBins_.descriptors.back();
+		uint32 nBinId = params.TotalMinimizersCount();
+
+		BinaryBinDescriptor& nDesc = binBins_.descriptors[nBinId];
 		nDesc.Clear();
-		PackToBin(dnaBins_.nBin, metaWriter, dnaWriter, nDesc, true);
+
+		if (dnaBins_.nBin.Size() > 0)
+			PackToBin(dnaBins_.nBin, metaWriter, dnaWriter, nDesc, true);
 
 		binBins_.metaSize = metaWriter.Position();
 		binBins_.dnaSize = dnaWriter.Position();
@@ -163,17 +173,16 @@ void DnaPacker::StoreNextRecord(const DnaRecord &rec_, BitMemoryWriter& metaWrit
 void DnaPacker::UnpackFromBins(const BinaryBinBlock &binBins_, DnaBinBlock &dnaBins_, DataChunk& dnaChunk_)
 {
 	const uint32 minimizersCount = params.TotalMinimizersCount();
-	ASSERT(minimizersCount == binBins_.descriptors.size() - 1);
 
-	if (dnaBins_.stdBins.Size() < binBins_.descriptors.size() - 1)
-		dnaBins_.stdBins.Resize(binBins_.descriptors.size() - 1);
+	dnaBins_.Clear();
 
 	// calculate total size of streams
 	//
 	uint64 rawDnaSize = 0;
-	for (uint32 i = 0; i < binBins_.descriptors.size(); ++i)
+	for (BinaryBinBlock::DescriptorMap::const_iterator i = binBins_.descriptors.begin();
+		 i != binBins_.descriptors.end(); ++i)
 	{
-		const BinaryBinDescriptor& desc = binBins_.descriptors[i];
+		const BinaryBinDescriptor& desc = i->second;
 		rawDnaSize += desc.rawDnaSize;
 	}
 
@@ -187,9 +196,13 @@ void DnaPacker::UnpackFromBins(const BinaryBinBlock &binBins_, DnaBinBlock &dnaB
 	BitMemoryReader metaReader(binBins_.metaData, binBins_.metaSize);
 	BitMemoryReader dnaReader(binBins_.dnaData, binBins_.dnaSize);
 
-	for (uint32 minId = 0; minId < minimizersCount; ++minId)
+	const BinaryBinBlock::DescriptorMap::const_iterator nIter = binBins_.descriptors.find(minimizersCount);
+	for (BinaryBinBlock::DescriptorMap::const_iterator i = binBins_.descriptors.begin();
+		 i != nIter; ++i)
 	{
-		const BinaryBinDescriptor& binDesc = binBins_.descriptors[minId];
+		const uint32 minId = i->first;
+		const BinaryBinDescriptor& binDesc = i->second;
+
 		DnaBin& db = dnaBins_.stdBins[minId];
 		db.Clear();
 
@@ -200,9 +213,13 @@ void DnaPacker::UnpackFromBins(const BinaryBinBlock &binBins_, DnaBinBlock &dnaB
 	}
 
 	dnaBins_.nBin.Clear();
-	const BinaryBinDescriptor& nBinDesc = binBins_.descriptors.back();
-	if (nBinDesc.recordsCount > 0)
-		UnpackFromBin(nBinDesc, dnaBins_.nBin, dnaChunk_, metaReader, dnaReader, minimizersCount);
+	if (nIter != binBins_.descriptors.end())
+	{
+		const BinaryBinDescriptor& nBinDesc = nIter->second;
+
+		if (nBinDesc.recordsCount > 0)
+			UnpackFromBin(nBinDesc, dnaBins_.nBin, dnaChunk_, metaReader, dnaReader, minimizersCount);
+	}
 
 }
 
@@ -295,9 +312,10 @@ void DnaPacker::UnpackFromBin(const BinaryBinBlock& binBin_, DnaBin& dnaBin_, ui
 	//
 	uint64 recordsCount = 0;
 
-	for (uint32 i = 0; i < binBin_.descriptors.size(); ++i)
+	for (BinaryBinBlock::DescriptorMap::const_iterator i = binBin_.descriptors.begin();
+		 i != binBin_.descriptors.end(); ++i)
 	{
-		const BinaryBinDescriptor& desc = binBin_.descriptors[i];
+		const BinaryBinDescriptor& desc = i->second;
 		recordsCount += desc.recordsCount;
 	}
 
@@ -346,9 +364,10 @@ void DnaPacker::UnpackFromBin(const BinaryBinBlock& binBin_, DnaBin& dnaBin_, ui
 
 	char* dnaBufferPtr = (char*)dnaChunk_.data.Pointer();
 
-	for (uint32 i = 0; i < binBin_.descriptors.size(); ++i)
+	for (BinaryBinBlock::DescriptorMap::const_iterator i = binBin_.descriptors.begin();
+		 i != binBin_.descriptors.end(); ++i)
 	{
-		const BinaryBinDescriptor& desc = binBin_.descriptors[i];
+		const BinaryBinDescriptor& desc = i->second;
 
 		const uint64 initialMetaPos = metaReader.Position();
 		const uint64 initialDnaPos = dnaReader.Position();

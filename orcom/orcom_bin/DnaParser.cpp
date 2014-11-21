@@ -153,9 +153,10 @@ uint64 DnaParser::ParseTo(const DnaBinBlock &dnaBins_, DataChunk &chunk_)
 	memoryPos = 0;
 	memorySize = chunk_.data.Size();
 
-	for (uint32 binId = 0; binId < dnaBins_.stdBins.Size(); ++binId)
+	for (DnaBinCollection::ConstIterator i = dnaBins_.stdBins.CBegin();
+		 i != dnaBins_.stdBins.CEnd(); ++i)
 	{
-		const DnaBin& dnaBin = dnaBins_.stdBins[binId];
+		const DnaBin& dnaBin = i->second;
 
 		for (uint32 r = 0; r < dnaBin.Size(); ++r)
 			WriteNextRecord(dnaBin[r]);

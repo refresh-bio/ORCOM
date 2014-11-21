@@ -84,7 +84,7 @@ void BinEncoder::Run()
 	DataChunk* fqPart = NULL;
 	BinaryPart* binPart = NULL;
 
-	DnaBinBlock dnaBins(params.TotalMinimizersCount());
+	DnaBinBlock dnaBins;
 	std::vector<DnaRecord> records;
 	records.resize(1 << 10);
 

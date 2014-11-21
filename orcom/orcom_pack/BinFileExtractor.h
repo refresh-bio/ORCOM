@@ -76,7 +76,7 @@ public:
 		ASSERT(blockDescriptors.size() > 0);
 
 		std::vector<const BlockDescriptor*> desc;
-		for (uint32 i = 0; i < stdBlockCount; ++i)							// TODO: just use insert / back_inserter
+		for (uint32 i = 0; i < blockDescriptors.size(); ++i)							// TODO: just use insert / back_inserter
 		{
 			const BlockDescriptor* bd = &blockDescriptors[i];
 			ASSERT(bd->metaSize > 0 && bd->recordsCount >= minBinSize);
