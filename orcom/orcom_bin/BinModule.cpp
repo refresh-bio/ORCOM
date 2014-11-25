@@ -9,6 +9,7 @@
 #include "Globals.h"
 
 #include <vector>
+#include <iostream>
 
 #include "BinModule.h"
 #include "FastqStream.h"
@@ -22,7 +23,8 @@
 #include "Thread.h"
 
 
-void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const std::string &outBinFile_, uint32 threadNum_,  bool compressedInput_)
+void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const std::string &outBinFile_,
+						  uint32 threadNum_,  bool compressedInput_, bool verboseMode_)
 {
 	// TODO: try/catch to free resources
 	//
@@ -144,6 +146,21 @@ void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const s
 	}
 
 	binFile.FinishCompress();
+
+	if (verboseMode_)
+	{
+		std::vector<uint64> recordCounts;
+		binFile.GetBinStats(recordCounts);
+
+		std::cout << "Signatures count: " << recordCounts.size() << std::endl;
+		std::cout << "Records distribution in bins by signature:\n";
+		for (uint32 i = 0; i < recordCounts.size(); ++i)
+		{
+			if (recordCounts[i] > 0)
+				std::cout << i << " : " << recordCounts[i] << '\n';
+		}
+		std::cout << std::endl;
+	}
 
 	delete fastqFile;
 }

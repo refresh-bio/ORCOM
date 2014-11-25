@@ -62,6 +62,8 @@ public:
 	void WriteNextBlock(const BinaryBinBlock* block_);
 	void FinishCompress();
 
+	void GetBinStats(std::vector<uint64>& recordsCounts_);
+
 protected:
 	IDataStreamWriter* metaStream;
 	IDataStreamWriter* dnaStream;

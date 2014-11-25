@@ -33,12 +33,6 @@ struct CompressorParams
 		,	insertCost(DefaultInsertCost)
 		,	minBinSize(DefaultMinimumBinSize)
 	{}
-
-	static CompressorParams Default()
-	{
-		CompressorParams pars;
-		return pars;
-	}
 };
 
 

@@ -19,7 +19,8 @@
 class DnarchModule
 {
 public:
-	void Bin2Dnarch(const std::string& inBinFile_, const std::string& outDnarchFile_, const CompressorParams& params_, uint32 threadsNum_ = 1);
+	void Bin2Dnarch(const std::string& inBinFile_, const std::string& outDnarchFile_,
+					const CompressorParams& params_, uint32 threadsNum_ = 1, bool verboseMode_ = false);
 	void Dnarch2Dna(const std::string& inDnarchFile_, const std::string& outDnaFile_, uint32 threadsNum_ = 1);
 };
 

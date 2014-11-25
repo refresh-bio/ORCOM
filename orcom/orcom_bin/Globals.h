@@ -50,7 +50,7 @@
 
 // app version control
 //
-#define APP_VERSION						"1.0a"
+#define APP_VERSION						"1.0rc"
 
 
 // experimental features
@@ -58,7 +58,6 @@
 #define EXP_USE_RC_ADV					0
 
 #define DEV_TWEAK_MODE					0
-#define DEV_PRINT_STATS					0
 
 
 // basic types

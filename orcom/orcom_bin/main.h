@@ -25,6 +25,8 @@ struct InputArguments
 		DecodeMode
 	};
 
+	static const bool DefaultVerboseMode = false;
+
 	static uint32 AvailableCoresNumber;
 	static uint32 DefaultThreadNumber;
 
@@ -33,6 +35,7 @@ struct InputArguments
 
 	bool compressedInput;
 	uint32 threadsNum;
+	bool verboseMode;
 
 	std::vector<std::string> inputFiles;
 	std::string outputFile;
@@ -40,13 +43,8 @@ struct InputArguments
 	InputArguments()
 		:	compressedInput(false)
 		,	threadsNum(DefaultThreadNumber)
+		,	verboseMode(DefaultVerboseMode)
 	{}
-
-	static InputArguments Default()
-	{
-		InputArguments args;
-		return args;
-	}
 };
 
 

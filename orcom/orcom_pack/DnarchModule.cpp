@@ -8,9 +8,7 @@
 
 #include "../orcom_bin/Globals.h"
 
-#if (DEV_PRINT_STATS)
-#	include <iostream>
-#endif
+#include <iostream>
 
 #include "DnarchModule.h"
 #include "BinFileExtractor.h"
@@ -24,7 +22,8 @@
 #include "../orcom_bin/Thread.h"
 
 
-void DnarchModule::Bin2Dnarch(const std::string &inBinFile_, const std::string &outDnarchFile_, const CompressorParams& params_, uint32 threadsNum_)
+void DnarchModule::Bin2Dnarch(const std::string &inBinFile_, const std::string &outDnarchFile_, const CompressorParams& params_,
+							  uint32 threadsNum_, bool verboseMode_)
 {
 	BinModuleConfig conf;
 	BinFileExtractor* extractor = new BinFileExtractor(params_.minBinSize);
@@ -273,16 +272,18 @@ void DnarchModule::Bin2Dnarch(const std::string &inBinFile_, const std::string &
 	extractor->FinishDecompress();
 	dnarch->FinishCompress();
 
-#if (DEV_PRINT_STATS)
-	// TODO: move this outside
-	std::vector<uint64> ss = dnarch->GetStreamSizes();
-	std::cerr << "Stream sizes:\n[stream_id] : stream_size\n";
-	for (uint32 i = 0; i < ss.size(); ++i)
+	if (verboseMode_)
 	{
-		std::cerr << '[' << i << "] : " << ss[i] << '\n';
+		const std::string streamNames[] = {"Flag", "LetterX", "Rev", "HardReads",
+										   "LzId", "Shift", "Len", "Match"};
+		std::vector<uint64> ss = dnarch->GetStreamSizes();
+		ASSERT(ss.size() == 8);
+
+		std::cout << "Stream sizes:\n";
+		for (uint32 i = 0; i < ss.size(); ++i)
+			std::cout << streamNames[i] << " : " << ss[i] << '\n';
+		std::cout << std::endl;
 	}
-	std::cerr << std::endl;
-#endif
 
 	delete dnarch;
 	delete extractor;

@@ -8,8 +8,6 @@
 
 #include "../orcom_bin/Globals.h"
 
-#include <iostream>
-
 #include "BinFileExtractor.h"
 #include "../orcom_bin/Exception.h"
 

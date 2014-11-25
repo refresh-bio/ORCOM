@@ -57,6 +57,7 @@ void usage()
 	std::cerr << "\t-m<n>\t\t: mismatch cost, default: " << CompressorParams::DefaultMismatchCost << '\n';
 	std::cerr << "\t-s<n>\t\t: insert cost, default: " << CompressorParams::DefaultInsertCost << '\n';
 	std::cerr << "\t-t<n>\t\t: threads count, default: " << InputArguments::DefaultThreadNumber << '\n';
+	std::cerr << "\t-v\t\t: verbose mode, default: false\n";
 
 #if (DEV_TWEAK_MODE)
 	std::cerr << "\t-n<n>\t\t: max encode value, default: " << CompressorParams::DefaultMaxCostValue << '\n';
@@ -71,7 +72,7 @@ int bin2dnarch(const InputArguments& args_)
 	{
 		DnarchModule module;
 
-		module.Bin2Dnarch(args_.inputFile, args_.outputFile, args_.params, args_.threadsNum);
+		module.Bin2Dnarch(args_.inputFile, args_.outputFile, args_.params, args_.threadsNum, args_.verboseMode);
 	}
 	catch (const std::exception& e)
 	{
@@ -131,6 +132,7 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_)
 			case 's':	outArgs_.params.insertCost = pval;				break;
 			case 'm':	outArgs_.params.mismatchCost = pval;			break;
 			case 't':	outArgs_.threadsNum = pval;						break;
+			case 'v':	outArgs_.verboseMode = true;					break;
 #if (DEV_TWEAK_MODE)
 			case 'n':	outArgs_.params.maxCostValue = pval;			break;
 			case 'f':	outArgs_.params.minBinSize = pval;				break;
@@ -149,6 +151,12 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_)
 	if (outArgs_.outputFile.length() == 0)
 	{
 		std::cerr << "Error: no output file specified\n";
+		return false;
+	}
+
+	if (outArgs_.threadsNum == 0 || outArgs_.threadsNum > 64)
+	{
+		std::cerr << "Error: invalid number of threads specified\n";
 		return false;
 	}
 

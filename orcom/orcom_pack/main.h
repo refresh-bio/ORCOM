@@ -24,6 +24,8 @@ struct InputArguments
 		DecodeMode
 	};
 
+	static const bool DefaultVerboseMode = false;
+
 	static uint32 AvailableCoresNumber;
 	static uint32 DefaultThreadNumber;
 
@@ -34,17 +36,12 @@ struct InputArguments
 
 	CompressorParams params;
 	uint32 threadsNum;
+	bool verboseMode;
 
 	InputArguments()
 		:	threadsNum(DefaultThreadNumber)
+		,	verboseMode(DefaultVerboseMode)
 	{}
-
-	static InputArguments Default()
-	{
-		InputArguments args;
-		args.params = CompressorParams::Default();
-		return args;
-	}
 };
 
 

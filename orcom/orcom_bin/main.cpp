@@ -58,6 +58,7 @@ void usage()
 	std::cerr << "\t-s<n>\t\t: skip-zone length, default: " << MinimizerParameters::DefaultskipZoneLen << '\n';
 	std::cerr << "\t-b<n>\t\t: FASTQ input buffer size (in MB), default: " << (BinModuleConfig::DefaultFastqBlockSize >> 20) << '\n';
 	std::cerr << "\t-t<n>\t\t: worker threads number, default: " << InputArguments::DefaultThreadNumber << '\n';
+	std::cerr << "\t-v\t\t: verbose mode, default: false\n";
 
 #if (DEV_TWEAK_MODE)
 	std::cerr << "\t-l<n>\t\t: signature suffix len, default: " << MinimizerParameters::DefaultSignatureSuffixLen << '\n';
@@ -75,7 +76,7 @@ int fastq2bin(const InputArguments& args_)
 		BinModule module;
 
 		module.SetModuleConfig(args_.config);
-		module.Fastq2Bin(args_.inputFiles, args_.outputFile, args_.threadsNum, args_.compressedInput);
+		module.Fastq2Bin(args_.inputFiles, args_.outputFile, args_.threadsNum, args_.compressedInput, args_.verboseMode);
 	}
 	catch (const std::exception& e)
 	{
@@ -134,6 +135,7 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_)
 			case 'b':	outArgs_.config.fastqBlockSize = (uint64)pval << 20;			break;
 			case 'g':	outArgs_.compressedInput = true;								break;
 			case 't':	outArgs_.threadsNum = pval;										break;
+			case 'v':	outArgs_.verboseMode = true;									break;
 			case 'f':
 			{
 				int beg = 2;
@@ -176,7 +178,7 @@ bool parse_arguments(int argc_, const char* argv_[], InputArguments& outArgs_)
 		return false;
 	}
 
-	if (outArgs_.threadsNum == 0)
+	if (outArgs_.threadsNum == 0 || outArgs_.threadsNum > 64)
 	{
 		std::cerr << "Error: invalid number of threads specified\n";
 		return false;

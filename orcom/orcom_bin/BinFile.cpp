@@ -9,9 +9,6 @@
 #include "Globals.h"
 
 #include <cstring>
-#if (DEV_PRINT_STATS)
-#	include <iostream>	// todo: move printing outside
-#endif
 
 #include "BinFile.h"
 #include "BitMemory.h"
@@ -117,44 +114,6 @@ void BinFileWriter::FinishCompress()
 	metaStream->SetPosition(0);
 	WriteFileHeader();
 
-#if (DEV_PRINT_STATS)
-	// display bins ------------- TODO move outside
-	//
-	{
-		std::cerr << "Packed bin sizes:\n[sig_id] : rec_count ( meta_size , dna_size )\n";
-
-		const uint32 minCount = fileFooter.params.minimizer.TotalMinimizersCount() + 1;
-		std::vector<uint64> recCount, metaSize, dnaSize;
-		recCount.resize(minCount);
-		metaSize.resize(minCount);
-		dnaSize.resize(minCount);
-
-		uint64 rcIter = 0;
-		for (uint64 i = 0; i < fileFooter.metaBinSizes.size(); ++i)
-		{
-			uint32 ms = fileFooter.metaBinSizes[i];
-			if (ms > 0)
-			{
-				uint32 minId = i % minCount;
-				recCount[minId] += fileFooter.recordsCounts[rcIter];
-				metaSize[minId] += fileFooter.metaBinSizes[rcIter];
-				dnaSize[minId] += fileFooter.dnaBinSizes[rcIter];
-				rcIter++;
-			}
-		}
-		for (uint64 i = 0; i < recCount.size(); ++i)
-		{
-			if (recCount[i] > 0)
-			{
-				std::cerr << '[' << i << "] : " << recCount[i]
-							 << " ( " << metaSize[i]
-							 << " , " << dnaSize[i] << " )\n";
-			}
-		}
-		std::cerr << std::endl;
-	}
-#endif
-
 
 	// cleanup
 	//
@@ -196,6 +155,23 @@ void BinFileWriter::WriteFileFooter()
 	metaStream->Write(writer.Pointer(), writer.Position());
 }
 
+void BinFileWriter::GetBinStats(std::vector<uint64>& recordsCounts_)
+{
+	const uint32 minCount = fileFooter.params.minimizer.TotalMinimizersCount() + 1;
+	recordsCounts_.resize(minCount, 0);
+
+	uint64 rcIter = 0;
+	for (uint64 i = 0; i < fileFooter.metaBinSizes.size(); ++i)
+	{
+		uint32 ms = fileFooter.metaBinSizes[i];
+		if (ms > 0)
+		{
+			uint32 minId = i % minCount;
+			recordsCounts_[minId] += fileFooter.recordsCounts[rcIter];
+			rcIter++;
+		}
+	}
+}
 
 BinFileReader::BinFileReader()
 	:	metaStream(NULL)

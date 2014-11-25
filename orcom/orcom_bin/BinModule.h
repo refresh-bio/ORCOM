@@ -20,7 +20,8 @@
 class BinModule
 {
 public:
-	void Fastq2Bin(const std::vector<std::string>& inFastqFiles_, const std::string& outBinFile_, uint32 threadNum_ = 1, bool compressedInput_ = false);
+	void Fastq2Bin(const std::vector<std::string>& inFastqFiles_, const std::string& outBinFile_,
+				   uint32 threadNum_ = 1, bool compressedInput_ = false, bool verboseMode_ = false);
 	void Bin2Dna(const std::string& inBinFile_, const std::string& outDnaFile_);
 
 	void SetModuleConfig(const BinModuleConfig& config_)
