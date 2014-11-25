@@ -22,4 +22,4 @@ clean:
 	cd orcom/orcom_bin/ && make clean
 	cd orcom/orcom_pack/ && make clean
 	cd tools/gen_fastq/ && make clean
-	-rm -r $(BIN_DIR)
+	-rm -rf $(BIN_DIR)

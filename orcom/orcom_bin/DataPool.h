@@ -12,6 +12,7 @@
 #include "Globals.h"
 
 #include <vector>
+#include <algorithm>
 
 #include "Thread.h"
 

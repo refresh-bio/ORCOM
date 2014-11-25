@@ -11,4 +11,4 @@ gen_fastq:
 	strip $@
 
 clean:
-	-rm gen_fastq
+	-rm -f gen_fastq

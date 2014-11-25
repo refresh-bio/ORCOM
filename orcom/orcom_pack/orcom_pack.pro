@@ -3,11 +3,12 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -lboost_thread -lboost_system
-LIBS += -lpthread
-
 QMAKE_CXXFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DDISABLE_GZ_STREAM
-QMAKE_CXXFLAGS += -DUSE_BOOST_THREAD
+#QMAKE_CXXFLAGS += -DUSE_BOOST_THREAD
+QMAKE_CXXFLAGS += -std=c++0x
+
+LIBS += -lpthread
+#LIBS += -lboost_thread -lboost_system
 
 
 HEADERS += \

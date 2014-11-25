@@ -4,8 +4,8 @@ all: orcom_bin
 
 CXX = g++
 CXX_FLAGS += -O3 -DNDEBUG -flto -fwhole-program
-CXX_FLAGS += -m64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-CXX_FLAGS += -std=c++11
+CXX_FLAGS += -m64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -static
+CXX_FLAGS += -DUSE_BOOST_THREAD
 
 CXX_OBJS = BinModule.o \
 	BinOperator.o \
@@ -17,7 +17,7 @@ CXX_OBJS = BinModule.o \
 	FileStream.o
 
 CXX_LIBS += -lz
-CXX_LIBS += -lpthread
+CXX_LIBS += -lboost_thread -lboost_system -lpthread
 
 .cpp.o:
 	$(CXX) $(CXX_FLAGS) -c $< -o $@
@@ -27,5 +27,5 @@ orcom_bin: $(CXX_OBJS)
 	strip $@
 
 clean:
-	-rm -f $(CXX_OBJS)
-	-rm -f orcom_bin
+	-rm $(CXX_OBJS)
+	-rm orcom_bin

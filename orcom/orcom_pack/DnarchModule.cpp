@@ -147,22 +147,21 @@ void DnarchModule::Bin2Dnarch(const std::string &inBinFile_, const std::string &
 
 
 #else
-		std::vector<th::thread> opThreadGroup;
+		std::vector<mt::thread> opThreadGroup;
 
 		for (uint32 i = 0; i < threadsNum_; ++i)
 		{
 			operators[i] = new BinPartsCompressor(conf.minimizer, params_,
 												  inQueue, inPool,
-												  outQueue, outPool,
-												  metaMapper, dnaMapper);
-			opThreadGroup.push_back(th::thread(mt::ref(*operators[i])));
+												  outQueue, outPool);
+			opThreadGroup.push_back(mt::thread(mt::ref(*operators[i])));
 		}
 
 		(*outWriter)();
 
 		readerThread.join();
 
-		for (th::thread& t : opThreadGroup)
+		for (mt::thread& t : opThreadGroup)
 		{
 			t.join();
 		}
@@ -338,14 +337,13 @@ void DnarchModule::Dnarch2Dna(const std::string &inDnarchFile_, const std::strin
 		opThreadGroup.join_all();
 
 #else
-		std::vector<th::thread> opThreadGroup;
+		std::vector<mt::thread> opThreadGroup;
 
 		for (uint32 i = 0; i < threadsNum_; ++i)
 		{
-			operators[i] = new BinPartsCompressor(conf.minimizer, params_,
+			operators[i] = new DnaPartsDecompressor(minParams,
 												  inQueue, inPool,
-												  outQueue, outPool,
-												  metaMapper, dnaMapper);
+												  outQueue, outPool);
 			opThreadGroup.push_back(mt::thread(mt::ref(*operators[i])));
 		}
 
@@ -353,7 +351,7 @@ void DnarchModule::Dnarch2Dna(const std::string &inDnarchFile_, const std::strin
 
 		readerThread.join();
 
-		for (th::thread& t : opThreadGroup)
+		for (mt::thread& t : opThreadGroup)
 		{
 			t.join();
 		}

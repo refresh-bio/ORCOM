@@ -3,9 +3,14 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -lz -lboost_thread -lboost_system
+QMAKE_CXXFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+#QMAKE_CXXFLAGS += -DUSE_BOOST_THREAD
+QMAKE_CXXFLAGS += -std=c++0x
 
-QMAKE_CXXFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DUSE_BOOST_THREAD
+LIBS += -lz
+#LIBS += -lboost_thread -lboost_system
+LIBS += -lpthread
+
 
 SOURCES += main.cpp \
     FileStream.cpp \

@@ -82,19 +82,20 @@ void BinModule::Fastq2Bin(const std::vector<std::string> &inFastqFiles_, const s
 
 
 #else
-		std::vector<th::thread> opThreadGroup;
+		std::vector<mt::thread> opThreadGroup;
 
 		for (uint32 i = 0; i < threadNum_; ++i)
 		{
-			operators[i] = new BinEncoder(config.minimizer, fastqQueue, fastqPool, binQueue, binPool);
-			opThreadGroup.push_back(th::thread(mt::ref(*operators[i])));
+			operators[i] = new BinEncoder(config.minimizer, config.catParams,
+										  fastqQueue, fastqPool, binQueue, binPool);
+			opThreadGroup.push_back(mt::thread(mt::ref(*operators[i])));
 		}
 
 		(*binWriter)();
 
 		readerThread.join();
 
-		for (th::thread& t : opThreadGroup)
+		for (mt::thread& t : opThreadGroup)
 		{
 			t.join();
 		}
