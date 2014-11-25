@@ -1,22 +1,26 @@
 .PHONY: bin pack gen_fastq
 
-all: bin pack gen_fastq
+all: cpp11 gen_fastq
 
 BIN_DIR = bin
 
-bin:
-	cd orcom/orcom_$@ && make clean orcom_$@
+cpp11:
+	cd orcom/orcom_bin && make clean orcom_bin
+	cd orcom/orcom_pack && make clean orcom_pack
 	test -d $(BIN_DIR) || mkdir $(BIN_DIR)	
-	cp orcom/orcom_$@/orcom_$@ $(BIN_DIR)/
+	mv orcom/orcom_bin/orcom_bin $(BIN_DIR)/
+	mv orcom/orcom_pack/orcom_pack $(BIN_DIR)/
 
-pack:
-	cd orcom/orcom_$@ && make clean orcom_$@
+boost:
+	cd orcom/orcom_bin && make -f Makefile.boost clean orcom_bin
+	cd orcom/orcom_pack && make -f Makefile.boost clean orcom_pack
 	test -d $(BIN_DIR) || mkdir $(BIN_DIR)	
-	cp orcom/orcom_$@/orcom_$@ $(BIN_DIR)/
+	mv orcom/orcom_bin/orcom_bin $(BIN_DIR)/
+	mv orcom/orcom_pack/orcom_pack $(BIN_DIR)/
 
 gen_fastq:
 	cd tools/gen_fastq && make
-	cp tools/gen_fastq/$@ $(BIN_DIR)/
+	mv tools/gen_fastq/$@ $(BIN_DIR)/
 
 clean:
 	cd orcom/orcom_bin/ && make clean

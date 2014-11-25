@@ -27,5 +27,5 @@ orcom_bin: $(CXX_OBJS)
 	strip $@
 
 clean:
-	-rm $(CXX_OBJS)
-	-rm orcom_bin
+	-rm -f $(CXX_OBJS)
+	-rm -f orcom_bin
