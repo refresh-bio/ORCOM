@@ -3,7 +3,7 @@
 import sys
 
 if len(sys.argv) != 3 or sys.argv[2] == sys.argv[1]:
-	print "usage: dna2fastq.py <input_dna_filename> <output_fastq_filename>"
+	print "usage: dna_to_fastq.py <input_dna_filename> <output_fastq_filename>"
 	exit(1)
 
 outfile = open(sys.argv[2], 'w')

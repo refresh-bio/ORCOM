@@ -1,32 +1,28 @@
 #!/bin/bash
 
-orcom_bin=./orcom_bin
-orcom_pack=./orcom_pack
-
 bin_tmp_prefix=__tmp.bin
 
-bin_threads=8
-sig_len=8
-skip_zone=12
-block_size=256
+orcom_bin=$1/orcom_bin
+orcom_pack=$1/orcom_pack
 
-pack_threads=8
-enc_th=50
-
-in_fastq=$1
-out_orcom=$2
+in_fastq=$2
+out_orcom=$3
 
 
-if [[ ! $# -eq 2 ]]; then
-	echo "Usage: ./$( basename $0 )  <in_fastq_file> <out_orcom_file>"
+####
+#
+# main
+#
+if [[ ! $# -eq 3 ]]; then
+	echo "Usage: ./$( basename $0 ) <orcom_binaries_path> <in_fastq_file> <out_orcom_archive>"
 	exit 1
 fi
 
 echo "Binning..."
-$orcom_bin e -i$in_fastq -o$bin_tmp_prefix -p$sig_len -s$skip_zone -b$block_size -t$bin_threads
+$orcom_bin e -i$in_fastq -o$bin_tmp_prefix
 
 echo "Packing..."
-$orcom_pack e -i$bin_tmp_prefix -o$out_orcom -e$enc_th -t$pack_threads
+$orcom_pack e -i$bin_tmp_prefix -o$out_orcom
 
 echo "Cleaning..."
 rm $bin_tmp_prefix*
