@@ -1,6 +1,6 @@
-.PHONY: bin pack gen_fastq
+.PHONY: cpp11 boost gen_fastq
 
-all: cpp11 gen_fastq
+all: cpp11
 
 BIN_DIR = bin
 
