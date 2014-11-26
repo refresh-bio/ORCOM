@@ -19,14 +19,14 @@ Pre-built binaries for Linux platform can be downloaded from the [official websi
 
 ORCOM currently provides Makefiles for building on Linux platform, however it should also be able to be compiled on Windows and/or MacOSX platforms. The only one prequisite is the availability of the _zlib_ library in the system.
 
-ORCOM binaries can be compiled in two ways - depending on the selection of multithreading support library, where for each a different makefile file is provided in subproject directories. In the first (default) case, threading support from _c++11_ standard will be used (g++ version >= 4.8). In the second case the _boost::threads_ library will be used, which is needed to be present on the build system.
+ORCOM binaries can be compiled in two ways - depending on the selection of multithreading support library, where for each a different makefile file is provided in subproject directories. In the first (default) case, threading support from _C++11_ standard will be used (g++ version >= 4.8). In the second case the _boost::threads_ library will be used, which is needed to be present on the build system.
 
 By default, binaries are compiled using _g++_, however compiling using _Clang_ or _Intel icpc_ should be also possible.
 
 
 ## Compiling
 
-To compile ORCOM using _g++_ >= 4.8 with c++11 standard and dynamic linking, in the main directory type:
+To compile ORCOM using _g++_ >= 4.8 with _C++11_ standard and dynamic linking, in the main directory type:
     
     make
 
@@ -41,6 +41,8 @@ However, to compile each subprogram separately, use the makefile files provided 
 
 
 # Usage
+
+DNA stream compression using ORCOM is a 2 stage process, consisting of running _orcom\_bin_ and _orcom\_pack_ subprograms in chain. However, to decompress the DNA stream, only running _orcom\_pack_ is needed.
 
 ## _orcom\_bin_
 
@@ -81,7 +83,7 @@ Encode reads from `NA19238_1.fastq` and `NA19238_2.fastq` files saving output to
     
 Encode reads from gzip-compressed FASTQ files (`-g`) in the current directory using `8` processing threads and saving the output to `NA19238.bin` bin files:
 
-    orcom bin e -f”$( ls *.fastq.gz )” -oNA19238.bin -g -t8
+    orcom_bin e -f”$( ls *.fastq.gz )” -oNA19238.bin -g -t8
     
 Decode reads from `NA19238.bin` bin files and save the DNA reads to `NA19238.dna` file.
 
@@ -120,12 +122,12 @@ The parameters `-e<value>`, `-m<value>` and `-s<value>` concern the records inte
 
 Encode (compress) clustered reads from `NA19238.bin` bin files using `4` processing threads and save the output to `NA19238.orcom` archive files:
 
-    orcom pack e -iNA19238.bin -oNA19238.orcom -t4
+    orcom_pack e -iNA19238.bin -oNA19238.orcom -t4
     
 Encode clustered reads from `NA19238.bin` bin files setting the read matching parameters of insert const to `2`, mismatch cost to `1` and encoding threshold to `40`, and saving the result to `NA19238.orcom` archive files:
 
-    orcom pack e -iNA19238.bin -oNA19238.orcom -s2 -m1 -e40 
+    orcom_pack e -iNA19238.bin -oNA19238.orcom -s2 -m1 -e40 
 
 Decode (decompress) reads from `NA19238.orcom` archive saving the DNA reads to `NA19238.dna` file:
 
-    orcom pack d -iNA19238.orcom -oNA19238.dna
+    orcom_pack d -iNA19238.orcom -oNA19238.dna
