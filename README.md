@@ -7,8 +7,9 @@ Currently, ORCOM works with FASTQ files and supports only compression of DNA str
 
 For more information please check out the [official website](http://sun.aei.polsl.pl/orcom/).
 
-
 # Building
+
+[![Travis Status](https://travis-ci.org/lrog/orcom.svg?branch=master)](https://travis-ci.org/lrog/orcom)
 
 ## Pre-built binaries
 
