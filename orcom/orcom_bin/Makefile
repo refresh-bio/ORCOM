@@ -2,7 +2,9 @@
 
 all: orcom_bin
 
-CXX = g++
+ifndef CXX
+	CXX = g++
+endif
 CXX_FLAGS += -O3 -DNDEBUG -flto -fwhole-program
 CXX_FLAGS += -m64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 CXX_FLAGS += -std=c++11
