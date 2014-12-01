@@ -17,7 +17,7 @@ CXX_OBJS = BinModule.o \
 	FileStream.o
 
 CXX_LIBS += -lz
-CXX_LIBS += -lboost_thread -lboost_system -lpthread
+CXX_LIBS += -lboost_thread -lboost_system -lboost_date_time -lpthread
 
 .cpp.o:
 	$(CXX) $(CXX_FLAGS) -c $< -o $@

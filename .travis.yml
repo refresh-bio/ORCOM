@@ -3,7 +3,7 @@ compiler: gcc
 before_script:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get -qq update
-  - sudo apt-get -qq install g++-4.8 libboost-thread-dev libboost-system-dev
+  - sudo apt-get -qq install g++-4.8 libboost-thread-dev libboost-system-dev libboost-date-time-dev
   - export CXX="g++-4.8"
 script:
   - make

@@ -20,7 +20,7 @@ CXX_OBJS =  DnarchModule.o \
 PPMD_OBJS = ../ppmd/PPMd.o \
 	../ppmd/Model.o
 
-CXX_LIBS += -lboost_thread -lboost_system -lpthread
+CXX_LIBS += -lboost_thread -lboost_system -lboost_date_time -lpthread
 
 .cpp.o:
 	$(CXX) $(CXX_FLAGS) -c $< -o $@
