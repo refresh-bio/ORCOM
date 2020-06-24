@@ -1,4 +1,7 @@
 # ORCOM
+
+[![GitHub downloads](https://img.shields.io/github/downloads/refresh-bio/orcom/total.svg?style=flag&label=GitHub%20downloads)](https://github.com/refresh-bio/ORCOM/releases)
+
 ORCOM - Overlapping Reads COmpression with Minimizers is a set of 2 tools designed for an effective and high-performance compression of DNA sequencing reads, which consist of:
 * _orcom\_bin_ - performing a DNA reads clusterization into bins,
 * _orcom\_pack_ - performing compression of the DNA reads stored in bins.
