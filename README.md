@@ -132,3 +132,8 @@ Encode clustered reads from `NA19238.bin` bin files setting the read matching pa
 Decode (decompress) reads from `NA19238.orcom` archive saving the DNA reads to `NA19238.dna` file:
 
     orcom_pack d -iNA19238.orcom -oNA19238.dna
+
+## Citing
+<a href="https://doi.org/10.1093/bioinformatics/btu844">
+Grabowski, Sz., Deorowicz, S., Roguski, L. (2014) Disk-based compression of data from genome sequencing, Bioinformatics, 31:1389&ndash;1395
+</a>
